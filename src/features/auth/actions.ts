@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import {
   loginSchema,
@@ -20,6 +21,40 @@ function firstIssueMessage(error: { issues: { message: string }[] }): string {
   return error.issues[0]?.message ?? "Ma'lumotlar noto'g'ri";
 }
 
+/**
+ * Returns the public origin used by Supabase email and OAuth callbacks.
+ * A localhost value is useful during development, but must never leak into
+ * production links. Vercel exposes the deployment and production domains as
+ * trusted environment variables, so production remains correct even when an
+ * old NEXT_PUBLIC_SITE_URL value was copied into the project settings.
+ */
+async function getPublicSiteUrl(): Promise<string> {
+  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "");
+  const configuredIsLocal = configuredUrl
+    ? /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(configuredUrl)
+    : false;
+
+  if (configuredUrl && (process.env.NODE_ENV !== "production" || !configuredIsLocal)) {
+    return configuredUrl;
+  }
+
+  const vercelHost =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  if (vercelHost) {
+    return `https://${vercelHost.replace(/^https?:\/\//, "").replace(/\/$/, "")}`;
+  }
+
+  // Local and non-Vercel deployments still work without extra configuration.
+  const requestHeaders = await headers();
+  const host = requestHeaders.get("host");
+  if (process.env.NODE_ENV !== "production" && host) {
+    const protocol = requestHeaders.get("x-forwarded-proto") ?? "http";
+    return `${protocol}://${host}`;
+  }
+
+  throw new Error("Production sayt manzili sozlanmagan");
+}
+
 export async function signUpWithEmail(
   _prev: ActionResult | null,
   formData: FormData
@@ -35,9 +70,9 @@ export async function signUpWithEmail(
   }
 
   const supabase = await createClient();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = await getPublicSiteUrl();
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -49,7 +84,51 @@ export async function signUpWithEmail(
     return { error: "Ro'yxatdan o'tishda xatolik yuz berdi. Qayta urinib ko'ring." };
   }
 
+  // Supabase intentionally returns a simulated user for an already-registered
+  // email. Detect that response so the UI does not promise an email that will
+  // never be sent.
+  if (data.user && data.user.identities?.length === 0) {
+    return {
+      error:
+        "Bu email avval ro'yxatdan o'tgan. Kirish yoki parolni tiklashdan foydalaning.",
+    };
+  }
+
   redirect("/signup/verify-email");
+}
+
+export async function resendConfirmationEmail(
+  _prev: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  const parsed = resetPasswordRequestSchema.safeParse({
+    email: formData.get("email"),
+  });
+
+  if (!parsed.success) {
+    return { error: firstIssueMessage(parsed.error) };
+  }
+
+  const supabase = await createClient();
+  const siteUrl = await getPublicSiteUrl();
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email: parsed.data.email,
+    options: {
+      emailRedirectTo: `${siteUrl}/auth/callback?next=/onboarding`,
+    },
+  });
+
+  if (error?.status === 429) {
+    return { error: "Juda ko'p so'rov yuborildi. Bir necha daqiqadan keyin qayta urinib ko'ring." };
+  }
+
+  if (error) {
+    return { error: "Tasdiqlash xatini yuborib bo'lmadi. Keyinroq qayta urinib ko'ring." };
+  }
+
+  // Keep the response neutral so registered email addresses cannot be probed.
+  return { success: true };
 }
 
 export async function loginWithEmail(
@@ -80,7 +159,7 @@ export async function loginWithEmail(
 
 export async function signInWithGoogle(): Promise<void> {
   const supabase = await createClient();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = await getPublicSiteUrl();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -116,7 +195,7 @@ export async function requestPasswordReset(
   }
 
   const supabase = await createClient();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = await getPublicSiteUrl();
 
   await supabase.auth.resetPasswordForEmail(parsed.data.email, {
     redirectTo: `${siteUrl}/auth/callback?next=/reset-password/confirm`,

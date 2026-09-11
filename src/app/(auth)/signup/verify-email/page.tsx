@@ -1,5 +1,6 @@
 import { MailCheck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ResendConfirmationForm } from "@/features/auth/ResendConfirmationForm";
 
 export default function VerifyEmailPage() {
   return (
@@ -11,8 +12,11 @@ export default function VerifyEmailPage() {
         <CardTitle className="text-xl">Emailingizni tasdiqlang</CardTitle>
       </CardHeader>
       <CardContent className="text-center text-sm text-muted-foreground">
-        Sizga tasdiqlash havolasi yuborildi. Emailingizni tekshiring va
-        havolani bosib, hisobingizni faollashtiring.
+        <p>
+          Sizga tasdiqlash havolasi yuborildi. Emailingizni tekshiring va
+          havolani bosib, hisobingizni faollashtiring.
+        </p>
+        <ResendConfirmationForm />
       </CardContent>
     </Card>
   );
