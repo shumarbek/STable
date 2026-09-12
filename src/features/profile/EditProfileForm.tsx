@@ -1,18 +1,26 @@
 "use client";
 
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mars, Venus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { onboardingSchema, type OnboardingValues } from "@/lib/validators/auth";
 import { updateProfile } from "@/features/profile/actions";
 import type { Profile } from "@/types/database";
+import { AvatarPicker } from "@/features/profile/AvatarPicker";
+import { cn } from "cn";
 
-export function EditProfileForm({ profile }: { profile: Profile }) {
+export function EditProfileForm({
+  profile,
+  avatars,
+}: {
+  profile: Profile;
+  avatars: { male: string[]; female: string[] };
+}) {
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<OnboardingValues>({
@@ -22,8 +30,12 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
       universityName: profile.university_name,
       faculty: profile.faculty ?? "",
       course: profile.course ?? "",
+      gender: profile.gender ?? "male",
+      avatarUrl: profile.avatar_url ?? "",
     },
   });
+  const gender = useWatch({ control: form.control, name: "gender" }) ?? "male";
+  const avatarUrl = useWatch({ control: form.control, name: "avatarUrl" }) ?? "";
 
   function onSubmit(values: OnboardingValues) {
     startTransition(async () => {
@@ -42,6 +54,39 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
         <Label htmlFor="fullName">Ism</Label>
         <Input id="fullName" {...form.register("fullName")} />
       </div>
+      <div className="grid gap-2">
+        <Label>Jinsingiz</Label>
+        <div className="grid grid-cols-2 gap-2">
+          {([
+            { value: "male" as const, label: "Erkak", icon: Mars },
+            { value: "female" as const, label: "Ayol", icon: Venus },
+          ]).map((option) => {
+            const Icon = option.icon;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  form.setValue("gender", option.value, { shouldDirty: true });
+                  form.setValue("avatarUrl", "", { shouldDirty: true });
+                }}
+                className={cn(
+                  "flex h-10 items-center justify-center gap-2 rounded-xl border text-sm font-medium",
+                  gender === option.value && "border-primary bg-primary/5 text-primary"
+                )}
+              >
+                <Icon className="size-4" /> {option.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <AvatarPicker
+        gender={gender}
+        value={avatarUrl}
+        onChange={(value) => form.setValue("avatarUrl", value, { shouldDirty: true })}
+        avatars={avatars}
+      />
       <div className="grid gap-1.5">
         <Label htmlFor="universityName">Universitet</Label>
         <Input id="universityName" {...form.register("universityName")} />

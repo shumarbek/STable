@@ -41,7 +41,7 @@ export default async function ReportsPage() {
                     {report.week_start} — {report.week_end}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {report.transaction_count} ta tranzaksiya
+                    {report.transaction_count} ta amal
                   </p>
                 </div>
                 <div className="flex items-center gap-3">

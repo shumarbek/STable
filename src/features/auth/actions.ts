@@ -248,6 +248,8 @@ export async function completeOnboarding(
     universityName: formData.get("universityName"),
     faculty: formData.get("faculty") || undefined,
     course: formData.get("course") || undefined,
+    gender: formData.get("gender"),
+    avatarUrl: formData.get("avatarUrl") || undefined,
   });
 
   if (!parsed.success) {
@@ -267,6 +269,8 @@ export async function completeOnboarding(
       p_university_name: parsed.data.universityName,
       p_faculty: parsed.data.faculty ?? null,
       p_course: parsed.data.course ?? null,
+      p_gender: parsed.data.gender,
+      p_avatar_url: parsed.data.avatarUrl ?? "",
     })
     .single();
 
@@ -274,15 +278,11 @@ export async function completeOnboarding(
     return { error: "Profil yaratishda xatolik yuz berdi." };
   }
 
-  // Give every new user a default cash wallet so they can log a
-  // transaction immediately, without a mandatory "create account" step.
-  await supabase.from("user_accounts").insert({
-    user_id: userData.user.id,
-    name: "Naqd",
-    type: "cash",
-    balance: 0,
-    currency: "UZS",
-  });
+  // Every user starts with the two payment methods used by the product.
+  await supabase.from("user_accounts").insert([
+    { user_id: userData.user.id, name: "Naqd", type: "cash", balance: 0, currency: "UZS" },
+    { user_id: userData.user.id, name: "Karta", type: "card", balance: 0, currency: "UZS" },
+  ]);
 
   return {
     success: true,

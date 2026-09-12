@@ -6,7 +6,7 @@ export function TopTransactionsList({ transactions }: { transactions: TopTransac
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Eng katta xarajatlar</CardTitle>
+        <CardTitle className="text-base">Eng katta chiqimlar</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         {transactions.length === 0 && (

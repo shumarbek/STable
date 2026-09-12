@@ -38,7 +38,7 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Tranzaksiyalar</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Kirim va chiqimlar</h1>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -68,7 +68,7 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
         <CardContent className="flex flex-col gap-1 p-2">
           {rows.length === 0 && (
             <p className="py-10 text-center text-sm text-muted-foreground">
-              Hech qanday tranzaksiya topilmadi.
+              Hech qanday amal topilmadi.
             </p>
           )}
           {rows.map((row) => (

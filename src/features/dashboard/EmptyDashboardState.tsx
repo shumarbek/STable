@@ -13,7 +13,7 @@ export function EmptyDashboardState({ fullName }: { fullName: string }) {
           {fullName ? `Salom, ${fullName}!` : "Xush kelibsiz!"}
         </h2>
         <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-          Hali hech qanday xarajat yo&apos;q. Birinchi xarajatingizni kiriting va
+          Hali hech qanday chiqim yo&apos;q. Birinchi chiqimingizni kiriting va
           moliyaviy nazoratni boshlang.
         </p>
       </div>
@@ -22,7 +22,7 @@ export function EmptyDashboardState({ fullName }: { fullName: string }) {
         render={
           <Link href="/transactions/new">
             <Plus className="size-4" />
-            Xarajat qo&apos;shish
+            Chiqim qo&apos;shish
           </Link>
         }
       />

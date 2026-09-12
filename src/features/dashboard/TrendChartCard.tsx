@@ -22,7 +22,7 @@ export function TrendChartCard({
   return (
     <Card className={cn(className)}>
       <CardHeader>
-        <CardTitle className="text-base">Kunlik xarajat tendensiyasi</CardTitle>
+        <CardTitle className="text-base">Kunlik chiqim dinamikasi</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-64 w-full">

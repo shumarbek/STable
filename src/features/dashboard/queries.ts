@@ -27,6 +27,35 @@ export interface DailyTrendRow {
   total_income: number;
 }
 
+export interface BalanceForecast {
+  cashBalance: number; cardBalance: number; totalBalance: number;
+  averageDailyRecurringExpense: number; estimatedDaysLeft: number | null;
+}
+
+export async function getBalanceForecast(): Promise<BalanceForecast> {
+  const supabase = await createClient();
+  const since = new Date();
+  since.setUTCDate(since.getUTCDate() - 29);
+  const sinceIso = since.toISOString().slice(0, 10);
+  const [{ data: accounts }, { data: transactions, error }] = await Promise.all([
+    supabase.from("user_accounts").select("balance,type").eq("is_active", true),
+    supabase.from("transactions").select("amount,category:categories(is_recurring)")
+      .eq("transaction_type", "expense").eq("is_zero_consumption", false)
+      .gte("transaction_date", sinceIso),
+  ]);
+  if (error) console.error("balance forecast failed", error.message);
+  const cashBalance = (accounts ?? []).filter((a) => a.type === "cash").reduce((sum, a) => sum + Number(a.balance), 0);
+  const cardBalance = (accounts ?? []).filter((a) => a.type === "card" || a.type === "bank").reduce((sum, a) => sum + Number(a.balance), 0);
+  const recurringTotal = (transactions ?? []).reduce((sum, row) => {
+    const category = row.category as unknown as { is_recurring?: boolean } | null;
+    return category?.is_recurring ? sum + Number(row.amount) : sum;
+  }, 0);
+  const totalBalance = cashBalance + cardBalance;
+  const averageDailyRecurringExpense = recurringTotal / 30;
+  return { cashBalance, cardBalance, totalBalance, averageDailyRecurringExpense,
+    estimatedDaysLeft: averageDailyRecurringExpense > 0 ? Math.max(0, Math.floor(totalBalance / averageDailyRecurringExpense)) : null };
+}
+
 /**
  * Fetches all dashboard aggregates via the get_dashboard_summary RPC.
  * All SUM/COUNT/GROUP BY happens in Postgres — see

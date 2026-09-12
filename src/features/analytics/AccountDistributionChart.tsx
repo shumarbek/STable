@@ -21,7 +21,7 @@ export function AccountDistributionChart({ data }: { data: AccountDistributionRo
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Hisoblar bo&apos;yicha xarajat</CardTitle>
+        <CardTitle className="text-base">Hisoblar bo&apos;yicha chiqim</CardTitle>
       </CardHeader>
       <CardContent>
         {chartData.length === 0 ? (

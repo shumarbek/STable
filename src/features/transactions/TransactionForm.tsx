@@ -32,8 +32,8 @@ import type { CategoryNode } from "@/features/categories/queries";
 import { toIsoDate } from "@/lib/calculations/date";
 
 const typeLabels: Record<TransactionFormValues["transactionType"], string> = {
-  expense: "Xarajat",
-  income: "Daromad",
+  expense: "Chiqim",
+  income: "Kirim",
   transfer: "O'tkazma",
   loan: "Qarz berish",
   debt_repayment: "Qarz qaytarish",
@@ -120,7 +120,7 @@ export function TransactionForm({
         return;
       }
 
-      toast.success(transactionId ? "Tranzaksiya yangilandi" : "Tranzaksiya saqlandi");
+      toast.success(transactionId ? "Amal yangilandi" : "Amal saqlandi");
       router.push("/dashboard");
       router.refresh();
     });
@@ -242,7 +242,7 @@ export function TransactionForm({
 
       <div className="grid gap-1.5">
         <div className="flex items-center justify-between">
-          <Label>Qo&apos;shimcha itemlar (ixtiyoriy)</Label>
+          <Label>Qo&apos;shimcha bandlar (ixtiyoriy)</Label>
           <Button
             type="button"
             variant="ghost"

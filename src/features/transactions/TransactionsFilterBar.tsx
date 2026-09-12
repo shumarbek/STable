@@ -54,8 +54,8 @@ export function TransactionsFilterBar({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Barchasi</SelectItem>
-          <SelectItem value="expense">Xarajat</SelectItem>
-          <SelectItem value="income">Daromad</SelectItem>
+          <SelectItem value="expense">Chiqim</SelectItem>
+          <SelectItem value="income">Kirim</SelectItem>
           <SelectItem value="transfer">O&apos;tkazma</SelectItem>
           <SelectItem value="loan">Qarz</SelectItem>
           <SelectItem value="debt_repayment">Qarz qaytarish</SelectItem>

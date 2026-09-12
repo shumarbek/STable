@@ -23,29 +23,30 @@ test.describe("Transactions", () => {
 
   test("creates a new expense transaction", async ({ page }) => {
     await page.goto("/transactions/new");
-    await page.getByLabel("Summa (so'm)").fill("15000");
-    await page.getByRole("button", { name: "Kategoriyani tanlang" }).click();
-    await page.getByRole("button", { name: /Oziq-ovqat/ }).first().click();
+    await page.getByRole("button", { name: /Oziq-ovqat/ }).click();
+    await page.getByRole("button", { name: /Tayyor ovqat/ }).click();
+    await page.getByLabel("Tayyor ovqat summasi").fill("15000");
     await page.getByRole("button", { name: "Saqlash" }).click();
     await expect(page).toHaveURL(/\/dashboard/);
   });
 
   test("shows validation error for a negative amount", async ({ page }) => {
     await page.goto("/transactions/new");
-    await page.getByLabel("Summa (so'm)").fill("-500");
-    await page.getByRole("button", { name: "Saqlash" }).click();
-    await expect(page.getByText("Summa manfiy bo'lishi mumkin emas")).toBeVisible();
+    await page.getByRole("button", { name: /Oziq-ovqat/ }).click();
+    await page.getByRole("button", { name: /Tayyor ovqat/ }).click();
+    await page.getByLabel("Tayyor ovqat summasi").fill("-500");
+    await expect(page.getByRole("button", { name: "Saqlash" })).toBeDisabled();
   });
 
   test("lists created transactions on the transactions page", async ({ page }) => {
     await page.goto("/transactions");
-    await expect(page.getByRole("heading", { name: "Tranzaksiyalar" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Kirim va chiqimlar" })).toBeVisible();
   });
 
   test("filters transactions by type", async ({ page }) => {
     await page.goto("/transactions");
     await page.getByRole("combobox").first().click();
-    await page.getByRole("option", { name: "Daromad" }).click();
+    await page.getByRole("option", { name: "Kirim" }).click();
     await expect(page).toHaveURL(/type=income/);
   });
 });

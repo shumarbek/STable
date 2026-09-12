@@ -27,15 +27,15 @@ export default async function ReportDetailPage({ params }: PageProps) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <SummaryStat label="Daromad" value={formatMoney(report.total_income)} tone="income" />
-        <SummaryStat label="Xarajat" value={formatMoney(report.total_expense)} tone="expense" />
+        <SummaryStat label="Kirim" value={formatMoney(report.total_income)} tone="income" />
+        <SummaryStat label="Chiqim" value={formatMoney(report.total_expense)} tone="expense" />
         <SummaryStat
           label="Sof oqim"
           value={formatMoney(report.net_cash_flow)}
           tone={report.net_cash_flow >= 0 ? "income" : "expense"}
         />
         <SummaryStat
-          label="Kunlik o'rtacha xarajat"
+          label="Kunlik o‘rtacha chiqim"
           value={formatMoney(report.average_daily_expense)}
         />
       </div>
@@ -46,7 +46,7 @@ export default async function ReportDetailPage({ params }: PageProps) {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Oldingi hafta xarajati: {formatMoney(report.previous_week_expense ?? 0)}
+            Oldingi hafta chiqimi: {formatMoney(report.previous_week_expense ?? 0)}
           </p>
           <p
             className={
@@ -62,7 +62,7 @@ export default async function ReportDetailPage({ params }: PageProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Kategoriya bo&apos;yicha xarajat</CardTitle>
+          <CardTitle className="text-base">Kategoriya bo&apos;yicha chiqim</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
           {items.length === 0 && (
@@ -85,7 +85,7 @@ export default async function ReportDetailPage({ params }: PageProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">Eng ko&apos;p xarajat</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">Eng ko&apos;p chiqim</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="font-medium">{topCategoryName ?? "—"}</p>
@@ -93,7 +93,7 @@ export default async function ReportDetailPage({ params }: PageProps) {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">Eng katta tranzaksiya</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">Eng katta amal</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="font-medium">

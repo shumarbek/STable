@@ -29,7 +29,8 @@ export function DeleteAccountDialog() {
         return;
       }
       toast.success("Hisobingiz o'chirildi");
-      router.push("/login");
+      router.replace("/login?hisob=ochirildi");
+      router.refresh();
     });
   }
 
@@ -47,9 +48,9 @@ export function DeleteAccountDialog() {
         <DialogHeader>
           <DialogTitle>Hisobni o&apos;chirishni tasdiqlaysizmi?</DialogTitle>
           <DialogDescription>
-            Bu amalni orqaga qaytarib bo&apos;lmaydi. Barcha tranzaksiyalar,
-            budjetlar, maqsadlar va hisobotlaringiz butunlay o&apos;chib
-            ketadi.
+            Bu amalni orqaga qaytarib bo&apos;lmaydi. Barcha kirim va chiqimlar,
+            balans, hisobotlar va kirish ma&apos;lumotlaringiz, jumladan
+            email/parol yoki Google bog&apos;lanishi butunlay o&apos;chib ketadi.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

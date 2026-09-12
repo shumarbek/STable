@@ -1,40 +1,17 @@
-import { getBudgetProgress } from "@/features/budgets/queries";
-import { getFlatCategories } from "@/features/categories/queries";
-import { CreateBudgetDialog } from "@/features/budgets/CreateBudgetDialog";
-import { BudgetCard } from "@/features/budgets/BudgetCard";
-import { Wallet } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { BalanceForm } from "@/features/accounts/BalanceForm";
+import { getActiveAccounts } from "@/features/accounts/queries";
+import { BalanceForecastCard } from "@/features/dashboard/BalanceForecastCard";
+import { getBalanceForecast } from "@/features/dashboard/queries";
 
-export default async function BudgetsPage() {
-  const [budgets, categories] = await Promise.all([
-    getBudgetProgress(),
-    getFlatCategories("expense"),
-  ]);
+export default async function BalancePage() {
+  const [accounts, forecast] = await Promise.all([getActiveAccounts(), getBalanceForecast()]);
+  const cash = accounts.filter((account) => account.type === "cash").reduce((sum, account) => sum + Number(account.balance), 0);
+  const card = accounts.filter((account) => account.type === "card" || account.type === "bank").reduce((sum, account) => sum + Number(account.balance), 0);
 
-  return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Budjetlar</h1>
-        <CreateBudgetDialog categories={categories} />
-      </div>
-
-      {budgets.length === 0 && (
-        <Card>
-          <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
-            <Wallet className="size-10 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">
-              Hali budjet yaratilmagan. Xarajatlaringizni nazorat qilish uchun
-              birinchi budjetingizni yarating.
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        {budgets.map((b) => (
-          <BudgetCard key={b.budget_id} budget={b} />
-        ))}
-      </div>
-    </div>
-  );
+  return <div className="mx-auto flex max-w-3xl flex-col gap-4">
+    <div><h1 className="text-2xl font-semibold tracking-tight">Mavjud balans</h1><p className="text-sm text-muted-foreground">Hozir qo‘lingizdagi naqd va kartadagi mablag‘ni kiriting.</p></div>
+    <Card><CardHeader><CardTitle className="text-base">Joriy mablag‘</CardTitle><CardDescription>Bu rejalashtirilgan budjet emas — ayni paytdagi haqiqiy pulingiz.</CardDescription></CardHeader><CardContent><BalanceForm cash={cash} card={card} /></CardContent></Card>
+    <BalanceForecastCard forecast={forecast} />
+  </div>;
 }

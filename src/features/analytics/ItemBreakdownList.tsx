@@ -6,12 +6,12 @@ export function ItemBreakdownList({ items }: { items: ItemBreakdownRow[] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Itemlar bo&apos;yicha xarajat</CardTitle>
+        <CardTitle className="text-base">Bandlar bo&apos;yicha chiqim</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         {items.length === 0 && (
           <p className="text-sm text-muted-foreground">
-            Hali qo&apos;shimcha item (ichimlik va h.k.) kiritilmagan.
+            Hali qo&apos;shimcha band (ichimlik va hokazo) kiritilmagan.
           </p>
         )}
         {items.map((item) => (

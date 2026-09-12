@@ -9,7 +9,7 @@ import { LogoutButton } from "@/features/dashboard/LogoutButton";
 
 export function Sidebar({ profile }: { profile: Profile }) {
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r bg-card md:flex">
+    <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r bg-card lg:flex">
       <div className="flex items-center gap-2 px-6 py-5">
         <Wallet className="size-6 text-primary" />
         <span className="font-heading text-lg font-semibold">STable</span>
@@ -26,8 +26,11 @@ export function Sidebar({ profile }: { profile: Profile }) {
           href="/profile"
           className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted"
         >
-          <div className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
-            {profile.full_name.charAt(0).toUpperCase()}
+          <div className="flex size-9 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-sm font-medium text-primary">
+            {profile.avatar_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={profile.avatar_url} alt="Profil rasmi" className="size-full object-cover" />
+            ) : profile.full_name.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium">{profile.full_name}</p>

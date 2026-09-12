@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { getTrustedNow, toDateOnlyInTimeZone } from "@/lib/time/serverTime";
+import { uz } from "date-fns/locale";
+import { uzMonthName } from "@/lib/calculations/date";
 
 /**
  * Date picker restricted to today-and-earlier (spec section 10). "Today"
@@ -50,16 +52,24 @@ export function DatePickerField({
             className={cn("w-full justify-start gap-2 font-normal")}
           >
             <CalendarIcon className="size-4" />
-            {selectedDate.toLocaleDateString("uz-UZ", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
+            {`${selectedDate.getDate()} ${uzMonthName(selectedDate.getMonth())} ${selectedDate.getFullYear()}`}
           </Button>
         }
       />
       <PopoverContent align="start" className="w-auto p-0">
         <Calendar
+          locale={uz}
+          labels={{
+            labelPrevious: () => "Oldingi oy",
+            labelNext: () => "Keyingi oy",
+            labelNav: () => "Oylar bo‘yicha boshqaruv",
+            labelDayButton: (date, modifiers) => {
+              const base = date.toLocaleDateString("uz-UZ", {
+                weekday: "long", day: "numeric", month: "long", year: "numeric",
+              });
+              return `${modifiers.today ? "Bugun, " : ""}${base}${modifiers.selected ? ", tanlangan" : ""}`;
+            },
+          }}
           mode="single"
           selected={selectedDate}
           defaultMonth={selectedDate}

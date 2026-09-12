@@ -2,11 +2,14 @@ import { getCurrentProfile } from "@/lib/supabase/profile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CopyableId } from "@/features/profile/CopyableId";
 import { EditProfileForm } from "@/features/profile/EditProfileForm";
+import { getProfileAvatars } from "@/lib/profile/avatars";
 
 export default async function ProfilePage() {
   const profile = await getCurrentProfile();
 
   if (!profile) return null;
+
+  const avatars = await getProfileAvatars();
 
   return (
     <div className="mx-auto flex max-w-lg flex-col gap-4">
@@ -21,7 +24,7 @@ export default async function ProfilePage() {
             <span className="text-sm text-muted-foreground">Foydalanuvchi ID</span>
             <CopyableId id={profile.public_user_id} />
           </div>
-          <EditProfileForm profile={profile} />
+          <EditProfileForm profile={profile} avatars={avatars} />
         </CardContent>
       </Card>
 

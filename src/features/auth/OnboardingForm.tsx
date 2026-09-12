@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Check, Copy, Loader2 } from "lucide-react";
+import { Check, Copy, Loader2, Mars, Venus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,9 +9,17 @@ import {
   completeOnboarding,
   type OnboardingResult,
 } from "@/features/auth/actions";
+import { AvatarPicker } from "@/features/profile/AvatarPicker";
+import { cn } from "cn";
 
-export function OnboardingForm() {
+export function OnboardingForm({
+  avatars,
+}: {
+  avatars: { male: string[]; female: string[] };
+}) {
   const [copied, setCopied] = useState(false);
+  const [gender, setGender] = useState<"male" | "female">("male");
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [state, formAction, pending] = useActionState<
     OnboardingResult | null,
     FormData
@@ -67,6 +75,41 @@ export function OnboardingForm() {
         <Label htmlFor="fullName">Ismingiz</Label>
         <Input id="fullName" name="fullName" required maxLength={120} />
       </div>
+      <div className="grid gap-2">
+        <Label>Jinsingiz</Label>
+        <input type="hidden" name="gender" value={gender} />
+        <input type="hidden" name="avatarUrl" value={avatarUrl} />
+        <div className="grid grid-cols-2 gap-2">
+          {([
+            { value: "male" as const, label: "Erkak", icon: Mars },
+            { value: "female" as const, label: "Ayol", icon: Venus },
+          ]).map((option) => {
+            const Icon = option.icon;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  setGender(option.value);
+                  setAvatarUrl("");
+                }}
+                className={cn(
+                  "flex h-11 items-center justify-center gap-2 rounded-xl border text-sm font-medium transition",
+                  gender === option.value && "border-primary bg-primary/5 text-primary"
+                )}
+              >
+                <Icon className="size-4" /> {option.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <AvatarPicker
+        gender={gender}
+        value={avatarUrl}
+        onChange={setAvatarUrl}
+        avatars={avatars}
+      />
       <div className="grid gap-1.5">
         <Label htmlFor="universityName">Universitetingiz</Label>
         <Input id="universityName" name="universityName" required maxLength={200} />

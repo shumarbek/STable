@@ -20,10 +20,18 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: { ...devices["Desktop Chrome"], channel: "chrome" },
+    },
+    {
+      name: "mobil",
+      use: { ...devices["Pixel 7"], channel: "chrome" },
+    },
+    {
+      name: "planshet",
+      use: { ...devices["iPad Pro 11"], browserName: "chromium", channel: "chrome" },
     },
   ],
-  webServer: {
+  webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {
     command: "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,

@@ -40,19 +40,19 @@ export function SummaryCards({
       </Card>
 
       <StatCard
-        label="Bugungi xarajat"
+        label="Bugungi chiqim"
         value={formatMoney(s.today_expense, currency)}
         tone="expense"
-        sub={`${s.today_transaction_count} ta tranzaksiya`}
+        sub={`${s.today_transaction_count} ta amal`}
       />
       <StatCard
-        label="Shu hafta xarajat"
+        label="Shu hafta chiqim"
         value={formatMoney(s.week_expense, currency)}
         tone="expense"
         sub={`kuniga o'rtacha ${formatMoney(s.week_avg_daily_expense, currency)}`}
       />
       <StatCard
-        label="Shu oy xarajat"
+        label="Shu oy chiqim"
         value={formatMoney(s.month_expense, currency)}
         tone="expense"
         sub={`kuniga o'rtacha ${formatMoney(s.month_avg_daily_expense, currency)}`}
@@ -61,7 +61,7 @@ export function SummaryCards({
         label="Shu oy sof oqim"
         value={formatMoney(netThisMonth, currency)}
         tone={netThisMonth >= 0 ? "income" : "expense"}
-        sub={`daromad ${formatMoney(s.month_income, currency)}`}
+        sub={`kirim ${formatMoney(s.month_income, currency)}`}
       />
     </div>
   );

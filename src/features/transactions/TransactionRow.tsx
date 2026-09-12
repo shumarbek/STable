@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatMoney } from "@/lib/calculations/money";
 import type { TransactionListRow } from "@/features/transactions/queries";
+import { CategoryIcon } from "@/features/categories/CategoryIcon";
 
 const typeSign: Record<string, "+" | "-" | ""> = {
   income: "+",
@@ -22,7 +23,7 @@ export function TransactionRow({ row }: { row: TransactionListRow }) {
       className="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-muted"
     >
       <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-base">
-        {row.category?.icon ?? "💳"}
+        <CategoryIcon icon={row.category?.icon} className="size-4" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">

@@ -38,6 +38,7 @@ export interface Profile {
   faculty: string | null;
   course: string | null;
   avatar_url: string | null;
+  gender: "male" | "female" | null;
   timezone: string;
   currency: string;
   created_at: string;
@@ -67,6 +68,7 @@ export interface Category {
   type: CategoryType;
   is_default: boolean;
   is_active: boolean;
+  is_recurring: boolean;
   sort_order: number;
   created_at: string;
   updated_at: string;

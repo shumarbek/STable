@@ -27,9 +27,9 @@ export default async function AppLayout({
   return (
     <div className="flex min-h-screen flex-1 bg-muted/30">
       <Sidebar profile={profile} />
-      <div className="flex flex-1 flex-col md:pl-64">
+      <div className="flex min-w-0 flex-1 flex-col lg:pl-64">
         <TopBar profile={profile} />
-        <main className="flex-1 px-4 pb-24 pt-4 md:px-8 md:pb-8">{children}</main>
+        <main className="min-w-0 flex-1 px-3 pb-24 pt-3 sm:px-4 lg:px-8 lg:pb-8 lg:pt-4">{children}</main>
       </div>
       <MobileBottomNav />
       <InstallPrompt />

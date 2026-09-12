@@ -15,6 +15,7 @@ import { ItemBreakdownList } from "@/features/analytics/ItemBreakdownList";
 import { MealStatsCard } from "@/features/analytics/MealStatsCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatMoney } from "@/lib/calculations/money";
+import { CategoryIcon } from "@/features/categories/CategoryIcon";
 
 export default async function AnalyticsPage() {
   const profile = await getCurrentProfile();
@@ -49,7 +50,7 @@ export default async function AnalyticsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Kategoriyalar bo&apos;yicha xarajat (shu oy)</CardTitle>
+          <CardTitle className="text-base">Kategoriyalar bo&apos;yicha chiqim (shu oy)</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
           {topCategories.length === 0 && (
@@ -57,8 +58,8 @@ export default async function AnalyticsPage() {
           )}
           {topCategories.map((cat) => (
             <div key={cat.category_id} className="flex items-center justify-between text-sm">
-              <span>
-                {cat.category_icon} {cat.category_name}
+              <span className="flex items-center gap-2">
+                <CategoryIcon icon={cat.category_icon} className="size-4" /> {cat.category_name}
               </span>
               <span className="font-medium">
                 {formatMoney(cat.total_amount)} ({cat.percentage.toFixed(1)}%)

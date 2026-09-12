@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatMoney } from "@/lib/calculations/money";
 import { uzMonthName } from "@/lib/calculations/date";
+import { CategoryIcon } from "@/features/categories/CategoryIcon";
 
 interface DayTransaction {
   id: string;
@@ -59,7 +60,7 @@ function DayDetailPanelInner({ day }: { day: string }) {
           {dayNum} {uzMonthName(month - 1)} {year}
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Jami xarajat: {formatMoney(totalExpense)} • Jami daromad:{" "}
+          Jami chiqim: {formatMoney(totalExpense)} • Jami kirim:{" "}
           {formatMoney(totalIncome)}
         </p>
       </CardHeader>
@@ -70,13 +71,13 @@ function DayDetailPanelInner({ day }: { day: string }) {
           ))}
         {transactions?.length === 0 && (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            Bu kunda tranzaksiya yo&apos;q.
+            Bu kunda amal yo&apos;q.
           </p>
         )}
         {transactions?.map((t) => (
           <div key={t.id} className="flex items-center justify-between rounded-lg px-2 py-2">
             <div className="flex items-center gap-2">
-              <span>{t.category?.icon ?? "💳"}</span>
+              <CategoryIcon icon={t.category?.icon} className="size-4" />
               <span className="text-sm">{t.category?.name ?? "Kategoriyasiz"}</span>
             </div>
             <span className="text-sm font-medium">{formatMoney(t.amount)}</span>

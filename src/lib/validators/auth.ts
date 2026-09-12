@@ -56,6 +56,10 @@ export const onboardingSchema = z.object({
     .max(200, "Nom juda uzun"),
   faculty: z.string().trim().max(150).optional(),
   course: z.string().trim().max(50).optional(),
+  gender: z.enum(["male", "female"], {
+    error: "Jinsingizni tanlang",
+  }),
+  avatarUrl: z.string().trim().max(300).optional(),
 });
 
 export type OnboardingValues = z.infer<typeof onboardingSchema>;

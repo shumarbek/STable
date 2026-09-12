@@ -15,7 +15,7 @@
  *    writes surface a clear "network unavailable" error to the user.
  */
 
-const CACHE_NAME = "stable-shell-v1";
+const CACHE_NAME = "stable-shell-v2";
 const APP_SHELL = ["/", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {

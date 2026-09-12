@@ -38,7 +38,7 @@ export function MonthlyTrendChart({ data }: { data: MonthlyTrendRow[] }) {
                 }}
               />
               <Legend
-                formatter={(value) => (value === "total_expense" ? "Xarajat" : "Daromad")}
+                formatter={(value) => (value === "total_expense" ? "Chiqim" : "Kirim")}
                 wrapperStyle={{ fontSize: 12 }}
               />
               <Bar dataKey="total_income" fill="var(--color-income)" radius={4} />

@@ -4,8 +4,37 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { transactionFormSchema } from "@/lib/validators/transaction";
+import { z } from "zod";
 
 export type TransactionActionResult = { error: string } | { success: true };
+
+const expenseBatchSchema = z.object({
+  transactionDate: z.iso.date(),
+  items: z.array(z.object({
+    categoryId: z.uuid(), accountId: z.uuid(), itemType: z.string().min(1).max(100),
+    name: z.string().min(1).max(100), amount: z.number().nonnegative(),
+    paymentMethod: z.enum(["cash", "card"]), isZeroConsumption: z.boolean(),
+    idempotencyKey: z.string().min(8).max(200),
+  })).min(1).max(30),
+});
+
+export async function createExpenseBatch(input: unknown): Promise<TransactionActionResult> {
+  const parsed = expenseBatchSchema.safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Ma’lumotlar noto‘g‘ri" };
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("create_expense_batch", {
+    p_transaction_date: parsed.data.transactionDate,
+    p_items: parsed.data.items,
+  });
+  if (error) {
+    console.error("create_expense_batch failed", error.message);
+    return { error: "Chiqimlarni saqlashda xatolik yuz berdi." };
+  }
+  revalidatePath("/dashboard"); revalidatePath("/transactions");
+  revalidatePath("/calendar"); revalidatePath("/budgets");
+  return { success: true };
+}
 
 /**
  * Creates a transaction. Duplicate-submit protection works two ways:
@@ -58,7 +87,7 @@ export async function createTransaction(input: unknown): Promise<TransactionActi
       revalidatePath("/transactions");
       return { success: true };
     }
-    return { error: "Tranzaksiyani saqlashda xatolik yuz berdi." };
+    return { error: "Amalni saqlashda xatolik yuz berdi." };
   }
 
   if (parsed.data.items.length > 0 && inserted) {
@@ -115,7 +144,7 @@ export async function updateTransaction(
     .eq("id", transactionId);
 
   if (error) {
-    return { error: "Tranzaksiyani yangilashda xatolik yuz berdi." };
+    return { error: "Amalni yangilashda xatolik yuz berdi." };
   }
 
   revalidatePath("/dashboard");

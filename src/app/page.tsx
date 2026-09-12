@@ -30,7 +30,7 @@ export default async function LandingPage() {
           Shaxsiy moliyangizni to&apos;liq nazorat qiling
         </h1>
         <p className="mt-4 max-w-xl text-balance text-muted-foreground md:text-lg">
-          Daromad va xarajatlaringizni aniq kategoriyalarga ajratib qayd qiling,
+          Kirim va chiqimlaringizni aniq kategoriyalarga ajratib qayd qiling,
           haftalik hisobotlar oling va pulingiz qayerga ketayotganini bir
           qarashda ko&apos;ring.
         </p>
@@ -52,7 +52,7 @@ export default async function LandingPage() {
           <FeatureCard
             icon={<LineChart className="size-5" />}
             title="Aniq statistika"
-            description="Kunlik, haftalik, oylik xarajat va daromad tahlili"
+            description="Kunlik, haftalik va oylik chiqim hamda kirim tahlili"
           />
           <FeatureCard
             icon={<CalendarCheck className="size-5" />}
