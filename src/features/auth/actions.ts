@@ -94,6 +94,14 @@ export async function signUpWithEmail(
     };
   }
 
+  // When email confirmation is disabled (the zero-cost production setup),
+  // Supabase creates a session immediately. Continue straight to onboarding
+  // instead of leaving the user on a page waiting for an email that is not
+  // required. Projects with confirmation enabled still use the email flow.
+  if (data.session) {
+    redirect("/onboarding");
+  }
+
   redirect("/signup/verify-email");
 }
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Check, Copy, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +11,6 @@ import {
 } from "@/features/auth/actions";
 
 export function OnboardingForm() {
-  const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [state, formAction, pending] = useActionState<
     OnboardingResult | null,
@@ -53,7 +51,10 @@ export function OnboardingForm() {
           Bu ID sizning profilingizda doim ko&apos;rinadi. Uni saqlab qo&apos;yishingiz
           shart emas.
         </p>
-        <Button className="h-11 w-full" onClick={() => router.push("/dashboard")}>
+        <Button
+          className="h-11 w-full"
+          onClick={() => window.location.assign("/dashboard")}
+        >
           Boshqaruv paneliga o&apos;tish
         </Button>
       </div>
