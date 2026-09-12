@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { CategoryIcon } from "@/features/categories/CategoryIcon";
 import {
   Select,
   SelectContent,
@@ -91,7 +92,10 @@ export function TransactionsFilterBar({
           <SelectItem value="all">Barcha kategoriyalar</SelectItem>
           {categories.map((cat) => (
             <SelectItem key={cat.id} value={cat.id}>
-              {cat.icon} {cat.name}
+              <span className="flex items-center gap-2">
+                <CategoryIcon icon={cat.icon} className="size-4" />
+                {cat.name}
+              </span>
             </SelectItem>
           ))}
         </SelectContent>

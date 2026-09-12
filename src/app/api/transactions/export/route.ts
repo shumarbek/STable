@@ -12,7 +12,7 @@ export async function GET() {
   const { data: userData } = await supabase.auth.getUser();
 
   if (!userData?.user) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    return NextResponse.json({ error: "Tizimga kirilmagan" }, { status: 401 });
   }
 
   const { data, error } = await supabase
@@ -64,11 +64,19 @@ export async function GET() {
   }
 
   const lines = [header.join(",")];
+  const typeLabels: Record<string, string> = {
+    expense: "Chiqim",
+    income: "Kirim",
+    transfer: "O‘tkazma",
+    loan: "Qarz berish",
+    debt_repayment: "Qarz qaytarish",
+    refund: "Qaytarish",
+  };
   for (const row of rows) {
     lines.push(
       [
         row.transaction_date,
-        row.transaction_type,
+        typeLabels[row.transaction_type] ?? row.transaction_type,
         String(row.amount),
         row.currency,
         relationName(row.category),
@@ -86,7 +94,7 @@ export async function GET() {
   return new NextResponse(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="stable-tranzaksiyalar-${new Date().toISOString().slice(0, 10)}.csv"`,
+      "Content-Disposition": `attachment; filename="stable-kirim-chiqimlar-${new Date().toISOString().slice(0, 10)}.csv"`,
     },
   });
 }

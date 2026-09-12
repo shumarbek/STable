@@ -5,8 +5,8 @@
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1e293b",
+  "background_color": "#020d2a",
+  "theme_color": "#020d2a",
   "orientation": "portrait-primary",
   "lang": "uz",
   "dir": "ltr",
@@ -39,14 +39,14 @@
   "categories": ["finance", "productivity"],
   "shortcuts": [
     {
-      "name": "Xarajat qo'shish",
-      "short_name": "Qo'shish",
+      "name": "Chiqim qo'shish",
+      "short_name": "Chiqim",
       "url": "/transactions/new",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Dashboard",
-      "short_name": "Dashboard",
+      "name": "Bosh sahifa",
+      "short_name": "Asosiy",
       "url": "/dashboard",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }

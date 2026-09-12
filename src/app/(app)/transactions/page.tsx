@@ -43,7 +43,7 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
           <Button
             variant="outline"
             size="icon"
-            aria-label="CSV eksport"
+            aria-label="Jadval faylini yuklab olish"
             render={
               <a href="/api/transactions/export" download>
                 <Download className="size-4" />
@@ -68,7 +68,7 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
         <CardContent className="flex flex-col gap-1 p-2">
           {rows.length === 0 && (
             <p className="py-10 text-center text-sm text-muted-foreground">
-              Hech qanday amal topilmadi.
+              Hech qanday kirim yoki chiqim topilmadi.
             </p>
           )}
           {rows.map((row) => (

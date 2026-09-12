@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { CategoryNode } from "@/features/categories/queries";
+import { CategoryIcon } from "@/features/categories/CategoryIcon";
 
 /**
  * Hierarchical category picker (spec section 102): a searchable popover
@@ -32,9 +33,9 @@ export function CategoryPicker({
 
   function findSelectedLabel(): string | null {
     for (const parent of categories) {
-      if (parent.id === value) return `${parent.icon ?? ""} ${parent.name}`.trim();
+      if (parent.id === value) return parent.name;
       for (const child of parent.children) {
-        if (child.id === value) return `${parent.icon ?? ""} ${child.name}`.trim();
+        if (child.id === value) return child.name;
       }
     }
     return null;
@@ -93,7 +94,7 @@ export function CategoryPicker({
                 <button
                   type="button"
                   onClick={() => {
-                    onChange(parent.id, `${parent.icon ?? ""} ${parent.name}`.trim());
+                    onChange(parent.id, parent.name);
                     setOpen(false);
                   }}
                   className={cn(
@@ -101,7 +102,7 @@ export function CategoryPicker({
                     value === parent.id && "bg-primary/10 text-primary"
                   )}
                 >
-                  <span>{parent.icon}</span>
+                  <CategoryIcon icon={parent.icon} className="size-4 shrink-0" />
                   <span className="flex-1 truncate">{parent.name}</span>
                   {value === parent.id && <Check className="size-4" />}
                 </button>
@@ -110,7 +111,7 @@ export function CategoryPicker({
                     key={child.id}
                     type="button"
                     onClick={() => {
-                      onChange(child.id, `${parent.icon ?? ""} ${child.name}`.trim());
+                      onChange(child.id, child.name);
                       setOpen(false);
                     }}
                     className={cn(

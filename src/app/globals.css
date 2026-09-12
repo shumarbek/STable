@@ -146,6 +146,95 @@
   --info-foreground: oklch(0.99 0 0);
 }
 
+.stable-splash {
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 18% 8%, rgb(20 92 205 / 0.52), transparent 34%),
+    radial-gradient(circle at 84% 58%, rgb(14 74 174 / 0.22), transparent 34%),
+    linear-gradient(155deg, #041a48 0%, #020d2a 46%, #03163c 100%);
+  transition: opacity 400ms ease, visibility 400ms ease;
+}
+
+.stable-splash--closing {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.stable-splash-content {
+  animation: stable-splash-rise 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stable-splash-progress {
+  width: 42%;
+  animation: stable-splash-progress 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stable-splash-orb,
+.stable-splash-wave {
+  pointer-events: none;
+  position: absolute;
+  border: 1px solid rgb(45 130 255 / 0.25);
+}
+
+.stable-splash-orb {
+  border-radius: 9999px;
+  background: linear-gradient(145deg, rgb(19 73 169 / 0.34), rgb(2 13 42 / 0));
+}
+
+.stable-splash-orb--top {
+  width: 21rem;
+  height: 21rem;
+  right: -10rem;
+  top: -11rem;
+}
+
+.stable-splash-orb--side {
+  width: 13rem;
+  height: 13rem;
+  left: -9rem;
+  top: 11%;
+  filter: blur(1px);
+}
+
+.stable-splash-wave {
+  width: 145%;
+  height: 19rem;
+  left: -25%;
+  bottom: 2.5rem;
+  border-radius: 50%;
+  border-width: 2px 0 0;
+  border-color: rgb(34 126 255 / 0.75);
+  background: linear-gradient(155deg, transparent 42%, rgb(13 76 179 / 0.30) 43%, rgb(5 29 82 / 0.16) 72%);
+  transform: rotate(8deg);
+}
+
+.stable-splash-wave--two {
+  width: 155%;
+  left: -18%;
+  bottom: -2.5rem;
+  border-color: rgb(31 103 221 / 0.42);
+  background: linear-gradient(165deg, transparent 44%, rgb(8 54 136 / 0.28) 45%, rgb(1 10 35 / 0.1) 78%);
+  transform: rotate(-5deg);
+}
+
+@keyframes stable-splash-rise {
+  from { opacity: 0; transform: translateY(1rem) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes stable-splash-progress {
+  from { width: 8%; transform: translateX(-100%); }
+  to { width: 100%; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stable-splash-content,
+  .stable-splash-progress {
+    animation: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

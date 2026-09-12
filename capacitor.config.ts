@@ -14,15 +14,14 @@ import type { CapacitorConfig } from "@capacitor/cli";
  * Local development: point `server.url` at your LAN IP running
  * `npm run dev` (e.g. http://192.168.1.50:3000) so the emulator/device
  * can reach it. Production builds should point at the real deployed
- * domain (Cloudflare Pages).
+ * domain (Vercel).
  */
 const config: CapacitorConfig = {
   appId: "uz.stable.app",
   appName: "STable",
   webDir: "public",
   server: {
-    // Replace with your production URL before building a release APK.
-    url: process.env.CAPACITOR_SERVER_URL || "https://stable.example.com",
+    url: process.env.CAPACITOR_SERVER_URL || "https://stable-uz.vercel.app",
     androidScheme: "https",
     cleartext: false,
   },

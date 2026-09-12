@@ -43,7 +43,7 @@ export default async function TransactionDetailPage({ params }: PageProps) {
     <div className="mx-auto max-w-lg">
       <Card>
         <CardHeader className="flex items-center justify-between">
-          <CardTitle>Amalni tahrirlash</CardTitle>
+          <CardTitle>Kirim yoki chiqimni tahrirlash</CardTitle>
           <form action={deleteTransaction.bind(null, tx.id)}>
             <Button type="submit" variant="ghost" size="icon" aria-label="O'chirish">
               <Trash2 className="size-4 text-destructive" />

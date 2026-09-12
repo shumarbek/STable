@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ServiceWorkerRegister } from "@/features/pwa/ServiceWorkerRegister";
 import { NetworkStatusBanner } from "@/features/pwa/NetworkStatusBanner";
+import { MobileSplashScreen } from "@/features/pwa/MobileSplashScreen";
 import "./globals.css";
 
 const inter = Inter({
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#1e293b",
+  themeColor: "#020d2a",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           disableTransitionOnChange
         >
           <TooltipProvider>
+            <MobileSplashScreen />
             <NetworkStatusBanner />
             {children}
             <Toaster richColors position="top-center" />

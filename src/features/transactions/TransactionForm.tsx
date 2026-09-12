@@ -120,7 +120,7 @@ export function TransactionForm({
         return;
       }
 
-      toast.success(transactionId ? "Amal yangilandi" : "Amal saqlandi");
+      toast.success(transactionId ? "Kirim yoki chiqim yangilandi" : "Kirim yoki chiqim saqlandi");
       router.push("/dashboard");
       router.refresh();
     });
