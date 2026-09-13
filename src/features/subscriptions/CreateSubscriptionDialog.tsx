@@ -97,7 +97,9 @@ export function CreateSubscriptionDialog({
               }}
             >
               <SelectTrigger className="w-full">
-                <SelectValue />
+                <SelectValue>
+                  {(value) => billingCycleLabels[value as keyof typeof billingCycleLabels] ?? "Oylik"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(billingCycleLabels).map(([value, label]) => (
@@ -123,7 +125,11 @@ export function CreateSubscriptionDialog({
               onValueChange={(v) => form.setValue("accountId", v && v !== "none" ? v : null)}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Tanlanmagan" />
+                <SelectValue>
+                  {(value) => value === "none"
+                    ? "Tanlanmagan"
+                    : accounts.find((account) => account.id === value)?.name ?? "Tanlanmagan"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">Tanlanmagan</SelectItem>
@@ -142,7 +148,11 @@ export function CreateSubscriptionDialog({
               onValueChange={(v) => form.setValue("categoryId", v && v !== "none" ? v : null)}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Tanlanmagan" />
+                <SelectValue>
+                  {(value) => value === "none"
+                    ? "Tanlanmagan"
+                    : categories.find((category) => category.id === value)?.name ?? "Tanlanmagan"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">Tanlanmagan</SelectItem>

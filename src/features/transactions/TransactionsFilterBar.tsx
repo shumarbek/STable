@@ -24,6 +24,21 @@ export function TransactionsFilterBar({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
+  const typeLabels: Record<string, string> = {
+    all: "Barchasi",
+    expense: "Chiqim",
+    income: "Kirim",
+    transfer: "O‘tkazma",
+    loan: "Qarz",
+    debt_repayment: "Qarz qaytarish",
+    refund: "Qaytarish",
+  };
+  const sortLabels: Record<string, string> = {
+    newest: "Eng yangi",
+    oldest: "Eng eski",
+    amount_desc: "Eng katta summa",
+    amount_asc: "Eng kichik summa",
+  };
 
   function setParam(key: string, value: string | undefined) {
     const params = new URLSearchParams(searchParams.toString());
@@ -63,7 +78,7 @@ export function TransactionsFilterBar({
         onValueChange={(v) => setParam("type", !v || v === "all" ? undefined : v)}
       >
         <SelectTrigger className="w-full sm:w-40">
-          <SelectValue placeholder="Turi" />
+          <SelectValue>{(value) => typeLabels[String(value)] ?? "Barchasi"}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Barchasi</SelectItem>
@@ -81,7 +96,11 @@ export function TransactionsFilterBar({
         onValueChange={(v) => setParam("accountId", !v || v === "all" ? undefined : v)}
       >
         <SelectTrigger className="w-full sm:w-40">
-          <SelectValue placeholder="Hisob" />
+          <SelectValue>
+            {(value) => value === "all"
+              ? "Barcha hisoblar"
+              : accounts.find((account) => account.id === value)?.name ?? "Barcha hisoblar"}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Barcha hisoblar</SelectItem>
@@ -98,7 +117,11 @@ export function TransactionsFilterBar({
         onValueChange={(v) => setParam("categoryId", !v || v === "all" ? undefined : v)}
       >
         <SelectTrigger className="w-full sm:w-44">
-          <SelectValue placeholder="Kategoriya" />
+          <SelectValue>
+            {(value) => value === "all"
+              ? "Barcha kategoriyalar"
+              : categories.find((category) => category.id === value)?.name ?? "Barcha kategoriyalar"}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Barcha kategoriyalar</SelectItem>
@@ -118,7 +141,7 @@ export function TransactionsFilterBar({
         onValueChange={(v) => setParam("sort", v ?? undefined)}
       >
         <SelectTrigger className="w-full sm:w-40">
-          <SelectValue placeholder="Saralash" />
+          <SelectValue>{(value) => sortLabels[String(value)] ?? "Eng yangi"}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="newest">Eng yangi</SelectItem>

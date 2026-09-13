@@ -82,7 +82,9 @@ export function CreateAccountDialog() {
               }}
             >
               <SelectTrigger className="w-full">
-                <SelectValue />
+                <SelectValue>
+                  {(value) => accountTypeLabels[value as keyof typeof accountTypeLabels] ?? "Naqd"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(accountTypeLabels).map(([value, label]) => (

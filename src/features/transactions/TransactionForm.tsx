@@ -190,7 +190,9 @@ export function TransactionForm({
           onValueChange={(v) => form.setValue("accountId", v ?? "")}
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Hisobni tanlang" />
+            <SelectValue>
+              {(value) => accounts.find((account) => account.id === value)?.name ?? "Hisobni tanlang"}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {accounts.map((acc) => (
@@ -210,7 +212,9 @@ export function TransactionForm({
             onValueChange={(v) => form.setValue("transferAccountId", v ?? undefined)}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Maqsad hisobni tanlang" />
+              <SelectValue>
+                {(value) => accounts.find((account) => account.id === value)?.name ?? "Maqsad hisobni tanlang"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {accounts

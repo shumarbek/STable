@@ -87,7 +87,11 @@ export function CreateBudgetDialog({ categories }: { categories: Category[] }) {
               }
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Barcha kategoriyalar" />
+                <SelectValue>
+                  {(value) => value === "none"
+                    ? "Barcha kategoriyalar"
+                    : categories.find((category) => category.id === value)?.name ?? "Barcha kategoriyalar"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">Barcha kategoriyalar</SelectItem>
@@ -116,7 +120,9 @@ export function CreateBudgetDialog({ categories }: { categories: Category[] }) {
               }}
             >
               <SelectTrigger className="w-full">
-                <SelectValue />
+                <SelectValue>
+                  {(value) => periodLabels[value as keyof typeof periodLabels] ?? "Oylik"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(periodLabels).map(([value, label]) => (
