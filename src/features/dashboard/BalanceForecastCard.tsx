@@ -10,7 +10,7 @@ export function BalanceForecastCard({ forecast }: { forecast: BalanceForecast })
       <Stat icon={WalletCards} label="Mavjud balans" value={formatMoney(forecast.totalBalance)} />
       <Stat icon={CalendarClock} label="Kunlik o‘rtacha muntazam chiqim" value={formatMoney(forecast.averageDailyRecurringExpense)} />
       <Stat icon={Gauge} label="Taxminiy yetish muddati" value={forecast.estimatedDaysLeft === null ? "Ma’lumot yetarli emas" : `${forecast.estimatedDaysLeft} kun`} />
-      <p className="text-xs text-muted-foreground sm:col-span-3">Hisob so‘nggi 30 kundagi muntazam chiqimlarga asoslanadi; ta’mir, qurilma, sayohat va sovg‘a kabi bir martalik sarflar kiritilmaydi.</p>
+      <p className="text-xs text-muted-foreground sm:col-span-3">Hisob {forecast.balanceDate ? `${forecast.balanceDate} sanasidan boshlab ` : ""}chiqim kiritilgan {forecast.reportDayCount} kun asosida olinadi. Ta’mir, qurilma, sayohat va sovg‘a kabi bir martalik sarflar o‘rtachaga kiritilmaydi.</p>
     </CardContent>
   </Card>;
 }

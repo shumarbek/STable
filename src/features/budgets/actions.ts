@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { budgetFormSchema } from "@/lib/validators/budget";
+import { revalidateAppData } from "@/lib/cache/revalidate-app-data";
 
 export type BudgetActionResult = { error: string } | { success: true };
 
@@ -33,7 +33,7 @@ export async function createBudget(input: unknown): Promise<BudgetActionResult> 
     return { error: "Budjet yaratishda xatolik yuz berdi." };
   }
 
-  revalidatePath("/budgets");
+  revalidateAppData();
   return { success: true };
 }
 
@@ -48,6 +48,6 @@ export async function deactivateBudget(budgetId: string): Promise<BudgetActionRe
     return { error: "Budjetni o'chirishda xatolik yuz berdi." };
   }
 
-  revalidatePath("/budgets");
+  revalidateAppData();
   return { success: true };
 }

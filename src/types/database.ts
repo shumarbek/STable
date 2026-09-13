@@ -54,6 +54,8 @@ export interface UserAccount {
   name: string;
   type: AccountType;
   balance: number;
+  balance_snapshot_amount: number;
+  balance_as_of_date: string;
   currency: string;
   is_active: boolean;
   created_at: string;

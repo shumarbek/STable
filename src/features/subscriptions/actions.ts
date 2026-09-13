@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { subscriptionFormSchema } from "@/lib/validators/subscription";
+import { revalidateAppData } from "@/lib/cache/revalidate-app-data";
 
 export type SubscriptionActionResult = { error: string } | { success: true };
 
@@ -34,7 +34,7 @@ export async function createSubscription(input: unknown): Promise<SubscriptionAc
     return { error: "Obuna yaratishda xatolik yuz berdi." };
   }
 
-  revalidatePath("/subscriptions");
+  revalidateAppData();
   return { success: true };
 }
 
@@ -51,6 +51,6 @@ export async function deactivateSubscription(
     return { error: "Obunani o'chirishda xatolik yuz berdi." };
   }
 
-  revalidatePath("/subscriptions");
+  revalidateAppData();
   return { success: true };
 }

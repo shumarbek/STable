@@ -30,30 +30,24 @@ export interface DailyTrendRow {
 export interface BalanceForecast {
   cashBalance: number; cardBalance: number; totalBalance: number;
   averageDailyRecurringExpense: number; estimatedDaysLeft: number | null;
+  reportDayCount: number; balanceDate: string | null;
 }
 
 export async function getBalanceForecast(): Promise<BalanceForecast> {
   const supabase = await createClient();
-  const since = new Date();
-  since.setUTCDate(since.getUTCDate() - 29);
-  const sinceIso = since.toISOString().slice(0, 10);
-  const [{ data: accounts }, { data: transactions, error }] = await Promise.all([
-    supabase.from("user_accounts").select("balance,type").eq("is_active", true),
-    supabase.from("transactions").select("amount,category:categories(is_recurring)")
-      .eq("transaction_type", "expense").eq("is_zero_consumption", false)
-      .gte("transaction_date", sinceIso),
-  ]);
-  if (error) console.error("balance forecast failed", error.message);
-  const cashBalance = (accounts ?? []).filter((a) => a.type === "cash").reduce((sum, a) => sum + Number(a.balance), 0);
-  const cardBalance = (accounts ?? []).filter((a) => a.type === "card" || a.type === "bank").reduce((sum, a) => sum + Number(a.balance), 0);
-  const recurringTotal = (transactions ?? []).reduce((sum, row) => {
-    const category = row.category as unknown as { is_recurring?: boolean } | null;
-    return category?.is_recurring ? sum + Number(row.amount) : sum;
-  }, 0);
+  const { data, error } = await supabase.rpc("get_balance_forecast").maybeSingle();
+  if (error) console.error("get_balance_forecast failed", error.message);
+  const row = data as { cash_balance?: number; card_balance?: number; balance_date?: string | null; recurring_total?: number; report_day_count?: number } | null;
+  const cashBalance = Number(row?.cash_balance ?? 0);
+  const cardBalance = Number(row?.card_balance ?? 0);
+  const recurringTotal = Number(row?.recurring_total ?? 0);
+  const reportDayCount = Number(row?.report_day_count ?? 0);
+  const balanceDate = row?.balance_date ?? null;
   const totalBalance = cashBalance + cardBalance;
-  const averageDailyRecurringExpense = recurringTotal / 30;
+  const averageDailyRecurringExpense = reportDayCount > 0 ? recurringTotal / reportDayCount : 0;
   return { cashBalance, cardBalance, totalBalance, averageDailyRecurringExpense,
-    estimatedDaysLeft: averageDailyRecurringExpense > 0 ? Math.max(0, Math.floor(totalBalance / averageDailyRecurringExpense)) : null };
+    estimatedDaysLeft: averageDailyRecurringExpense > 0 ? Math.max(0, Math.floor(totalBalance / averageDailyRecurringExpense)) : null,
+    reportDayCount, balanceDate };
 }
 
 /**

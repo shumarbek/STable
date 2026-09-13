@@ -1,9 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { transactionFormSchema } from "@/lib/validators/transaction";
+import { revalidateAppData } from "@/lib/cache/revalidate-app-data";
 import { z } from "zod";
 
 export type TransactionActionResult = { error: string } | { success: true };
@@ -15,26 +15,74 @@ const expenseBatchSchema = z.object({
     name: z.string().min(1).max(100), amount: z.number().nonnegative(),
     paymentMethod: z.enum(["cash", "card"]), isZeroConsumption: z.boolean(),
     idempotencyKey: z.string().min(8).max(200),
-  })).min(1).max(30),
+  })).max(100),
 });
 
-export async function createExpenseBatch(input: unknown): Promise<TransactionActionResult> {
+export interface DailyExpenseDraft {
+  categoryId: string;
+  name: string;
+  amount: number;
+  paymentMethod: "cash" | "card";
+  isZeroConsumption: boolean;
+}
+
+export async function getDailyExpenseReport(transactionDate: string): Promise<
+  { error: string } | { success: true; items: DailyExpenseDraft[] }
+> {
+  const parsed = z.iso.date().safeParse(transactionDate);
+  if (!parsed.success) return { error: "Sana noto‘g‘ri" };
+
+  const supabase = await createClient();
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData?.user) return { error: "Sessiya topilmadi." };
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("category_id,amount,note,is_zero_consumption,account:user_accounts!transactions_account_id_fkey(type),items:transaction_items(item_name,metadata)")
+    .eq("transaction_type", "expense")
+    .eq("transaction_date", parsed.data)
+    .order("created_at", { ascending: true });
+  if (error) {
+    console.error("getDailyExpenseReport failed", error.message);
+    return { error: "Kunlik chiqimlarni yuklab bo‘lmadi." };
+  }
+
+  const items = (data ?? []).flatMap((row) => {
+    if (!row.category_id) return [];
+    const account = Array.isArray(row.account) ? row.account[0] : row.account;
+    const transactionItems = Array.isArray(row.items) ? row.items : [];
+    const transactionItem = transactionItems[0] as { item_name?: string; metadata?: { paymentMethod?: string } } | undefined;
+    const method = transactionItem?.metadata?.paymentMethod === "card" || account?.type === "card" || account?.type === "bank"
+      ? "card" as const : "cash" as const;
+    return [{
+      categoryId: row.category_id,
+      name: transactionItem?.item_name ?? row.note ?? "Chiqim",
+      amount: Number(row.amount),
+      paymentMethod: method,
+      isZeroConsumption: Boolean(row.is_zero_consumption),
+    }];
+  });
+  return { success: true, items };
+}
+
+export async function syncDailyExpenseReport(input: unknown): Promise<TransactionActionResult> {
   const parsed = expenseBatchSchema.safeParse(input);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Ma’lumotlar noto‘g‘ri" };
 
   const supabase = await createClient();
-  const { error } = await supabase.rpc("create_expense_batch", {
+  const { error } = await supabase.rpc("sync_daily_expense_report", {
     p_transaction_date: parsed.data.transactionDate,
     p_items: parsed.data.items,
   });
   if (error) {
-    console.error("create_expense_batch failed", error.message);
+    console.error("sync_daily_expense_report failed", error.message);
     return { error: "Chiqimlarni saqlashda xatolik yuz berdi." };
   }
-  revalidatePath("/dashboard"); revalidatePath("/transactions");
-  revalidatePath("/calendar"); revalidatePath("/budgets");
+  revalidateAppData();
   return { success: true };
 }
+
+export const createExpenseBatch = syncDailyExpenseReport;
 
 /**
  * Creates a transaction. Duplicate-submit protection works two ways:
@@ -83,8 +131,7 @@ export async function createTransaction(input: unknown): Promise<TransactionActi
     // Unique violation on idempotency key means this exact submission
     // already succeeded previously — treat as success, not an error.
     if (error.code === "23505") {
-      revalidatePath("/dashboard");
-      revalidatePath("/transactions");
+      revalidateAppData();
       return { success: true };
     }
     return { error: "Amalni saqlashda xatolik yuz berdi." };
@@ -111,9 +158,7 @@ export async function createTransaction(input: unknown): Promise<TransactionActi
     );
   }
 
-  revalidatePath("/dashboard");
-  revalidatePath("/transactions");
-  revalidatePath("/calendar");
+  revalidateAppData();
   return { success: true };
 }
 
@@ -147,9 +192,7 @@ export async function updateTransaction(
     return { error: "Amalni yangilashda xatolik yuz berdi." };
   }
 
-  revalidatePath("/dashboard");
-  revalidatePath("/transactions");
-  revalidatePath("/calendar");
+  revalidateAppData();
   return { success: true };
 }
 
@@ -157,8 +200,6 @@ export async function deleteTransaction(transactionId: string): Promise<void> {
   const supabase = await createClient();
   await supabase.from("transactions").delete().eq("id", transactionId);
 
-  revalidatePath("/dashboard");
-  revalidatePath("/transactions");
-  revalidatePath("/calendar");
+  revalidateAppData();
   redirect("/transactions");
 }

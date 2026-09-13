@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { goalFormSchema } from "@/lib/validators/goal";
+import { revalidateAppData } from "@/lib/cache/revalidate-app-data";
 
 export type GoalActionResult = { error: string } | { success: true };
 
@@ -32,7 +32,7 @@ export async function createGoal(input: unknown): Promise<GoalActionResult> {
     return { error: "Maqsad yaratishda xatolik yuz berdi." };
   }
 
-  revalidatePath("/goals");
+  revalidateAppData();
   return { success: true };
 }
 
@@ -58,7 +58,7 @@ export async function updateGoalProgress(
     return { error: "Maqsadni yangilashda xatolik yuz berdi." };
   }
 
-  revalidatePath("/goals");
+  revalidateAppData();
   return { success: true };
 }
 
@@ -70,6 +70,6 @@ export async function deleteGoal(goalId: string): Promise<GoalActionResult> {
     return { error: "Maqsadni o'chirishda xatolik yuz berdi." };
   }
 
-  revalidatePath("/goals");
+  revalidateAppData();
   return { success: true };
 }

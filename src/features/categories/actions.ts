@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { customCategorySchema, slugifyCategoryName } from "@/lib/validators/category";
+import { revalidateAppData } from "@/lib/cache/revalidate-app-data";
 
 export type CategoryActionResult = { error: string } | { success: true };
 
@@ -40,8 +40,7 @@ export async function createCustomCategory(
     return { error: "Kategoriya yaratishda xatolik yuz berdi." };
   }
 
-  revalidatePath("/transactions/new");
-  revalidatePath("/settings/categories");
+  revalidateAppData();
   return { success: true };
 }
 
@@ -67,6 +66,6 @@ export async function deactivateCustomCategory(
     return { error: "Kategoriyani o'chirishda xatolik yuz berdi." };
   }
 
-  revalidatePath("/settings/categories");
+  revalidateAppData();
   return { success: true };
 }

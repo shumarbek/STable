@@ -43,13 +43,13 @@ export function MobileBottomNav() {
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-                return <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)} className={cn("flex min-h-16 items-center gap-3 rounded-2xl border p-3 text-sm font-medium", active ? "border-primary bg-primary/5 text-primary" : "bg-background")}><Icon className="size-5 shrink-0" /><span className="leading-tight">{item.label}</span></Link>;
+                return <Link key={item.href} href={item.href} prefetch={false} onClick={() => setMenuOpen(false)} className={cn("flex min-h-16 items-center gap-3 rounded-2xl border p-3 text-sm font-medium", active ? "border-primary bg-primary/5 text-primary" : "bg-background")}><Icon className="size-5 shrink-0" /><span className="leading-tight">{item.label}</span></Link>;
               })}
             </div>
           </SheetContent>
         </Sheet>
 
-        <Link href="/transactions/new" aria-label="Chiqim qo‘shish" className="absolute left-1/2 top-0 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform active:scale-95">
+        <Link href="/transactions/new" prefetch={false} aria-label="Chiqim qo‘shish" className="absolute left-1/2 top-0 flex size-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform active:scale-95">
           <Plus className="size-6" />
         </Link>
       </div>
@@ -59,5 +59,5 @@ export function MobileBottomNav() {
 
 function NavLink({ href, label, icon: Icon, pathname }: { href: string; label: string; icon: React.ComponentType<{ className?: string }>; pathname: string }) {
   const active = pathname === href || pathname.startsWith(`${href}/`);
-  return <Link href={href} className={cn("flex h-full flex-col items-center justify-center gap-0.5 px-1 text-[11px]", active ? "text-primary" : "text-muted-foreground")}><Icon className="size-5 shrink-0" /><span className="max-w-full text-center leading-[1.05]">{label}</span></Link>;
+  return <Link href={href} prefetch={false} className={cn("flex h-full flex-col items-center justify-center gap-0.5 px-1 text-[11px]", active ? "text-primary" : "text-muted-foreground")}><Icon className="size-5 shrink-0" /><span className="max-w-full text-center leading-[1.05]">{label}</span></Link>;
 }

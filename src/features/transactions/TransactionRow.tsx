@@ -23,14 +23,14 @@ export function TransactionRow({ row }: { row: TransactionListRow }) {
       className="flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-muted"
     >
       <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-base">
-        <CategoryIcon icon={row.category?.icon} className="size-4" />
+        <CategoryIcon icon={row.rootCategory?.icon ?? row.category?.icon} className="size-4" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium">
-          {row.category?.name ?? "Kategoriyasiz"}
+          {row.rootCategory?.name ?? row.category?.name ?? "Kategoriyasiz"}
         </p>
         <p className="truncate text-xs text-muted-foreground">
-          {row.account?.name} • {row.transaction_date}
+          {row.detailCategoryName ? `${row.detailCategoryName} · ` : ""}{row.account?.name} · {row.transaction_date}
         </p>
       </div>
       <p className={`shrink-0 text-sm font-medium ${tone}`}>

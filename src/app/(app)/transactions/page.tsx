@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Plus, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { getTransactionsList } from "@/features/transactions/queries";
+import { getTransactionCategoryTotals, getTransactionsList } from "@/features/transactions/queries";
 import { TransactionRow } from "@/features/transactions/TransactionRow";
 import { TransactionsFilterBar } from "@/features/transactions/TransactionsFilterBar";
 import { getActiveAccounts } from "@/features/accounts/queries";
@@ -17,20 +17,22 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const page = Number(params.page ?? "1") || 1;
 
-  const [{ rows, totalCount }, accounts, categories] = await Promise.all([
-    getTransactionsList({
-      search: params.search,
-      categoryId: params.categoryId,
-      accountId: params.accountId,
-      transactionType: params.type as TransactionType | undefined,
-      dateFrom: params.dateFrom,
-      dateTo: params.dateTo,
-      sort: params.sort as "newest" | "oldest" | "amount_desc" | "amount_asc" | undefined,
-      page,
-      pageSize: 20,
-    }),
+  const filters = {
+    search: params.search,
+    categoryId: params.categoryId,
+    accountId: params.accountId,
+    transactionType: params.type as TransactionType | undefined,
+    dateFrom: params.dateFrom,
+    dateTo: params.dateTo,
+    sort: params.sort as "newest" | "oldest" | "amount_desc" | "amount_asc" | undefined,
+    page,
+    pageSize: 20,
+  };
+  const [{ rows, totalCount }, categoryTotals, accounts, categories] = await Promise.all([
+    getTransactionsList(filters),
+    getTransactionCategoryTotals(filters),
     getActiveAccounts(),
-    getFlatCategories(),
+    getFlatCategories().then((all) => all.filter((category) => !category.parent_id)),
   ]);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / 20));
@@ -63,6 +65,10 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
       </div>
 
       <TransactionsFilterBar accounts={accounts} categories={categories} />
+
+      {categoryTotals.length > 0 && <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        {categoryTotals.slice(0, 8).map((category) => <Card key={category.category_id ?? "none"}><CardContent className="p-3"><p className="truncate text-xs text-muted-foreground">{category.category_name ?? "Kategoriyasiz"}</p><p className="mt-1 font-semibold tabular-nums">{new Intl.NumberFormat("uz-UZ").format(category.total_amount)} so‘m</p><p className="text-xs text-muted-foreground">{category.transaction_count} ta amal</p></CardContent></Card>)}
+      </div>}
 
       <Card>
         <CardContent className="flex flex-col gap-1 p-2">

@@ -1,9 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { onboardingSchema } from "@/lib/validators/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { revalidateAppData } from "@/lib/cache/revalidate-app-data";
 
 export type ProfileActionResult = { error: string } | { success: true };
 
@@ -38,7 +38,7 @@ export async function updateProfile(input: unknown): Promise<ProfileActionResult
     return { error: "Profilni yangilashda xatolik yuz berdi." };
   }
 
-  revalidatePath("/profile");
+  revalidateAppData();
   return { success: true };
 }
 

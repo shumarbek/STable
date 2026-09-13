@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,7 @@ export function TransactionsFilterBar({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
 
   function setParam(key: string, value: string | undefined) {
     const params = new URLSearchParams(searchParams.toString());
@@ -31,17 +33,27 @@ export function TransactionsFilterBar({
       params.delete(key);
     }
     params.delete("page");
-    router.push(`/transactions?${params.toString()}`);
+    const query = params.toString();
+    router.replace(query ? `/transactions?${query}` : "/transactions", { scroll: false });
   }
+
+  useEffect(() => {
+    const current = searchParams.get("search") ?? "";
+    if (search === current) return;
+    const timeout = window.setTimeout(() => setParam("search", search.trim() || undefined), 350);
+    return () => window.clearTimeout(timeout);
+    // URL parameters deliberately restart the comparison after navigation.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, searchParams]);
 
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
       <div className="relative flex-1">
         <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Izoh bo'yicha qidirish..."
-          defaultValue={searchParams.get("search") ?? ""}
-          onChange={(e) => setParam("search", e.target.value || undefined)}
+          placeholder="Izoh bo‘yicha qidirish..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           className="pl-9"
         />
       </div>
@@ -109,10 +121,10 @@ export function TransactionsFilterBar({
           <SelectValue placeholder="Saralash" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="newest">Yangi birinchi</SelectItem>
-          <SelectItem value="oldest">Eski birinchi</SelectItem>
-          <SelectItem value="amount_desc">Yuqori summa</SelectItem>
-          <SelectItem value="amount_asc">Past summa</SelectItem>
+          <SelectItem value="newest">Eng yangi</SelectItem>
+          <SelectItem value="oldest">Eng eski</SelectItem>
+          <SelectItem value="amount_desc">Eng katta summa</SelectItem>
+          <SelectItem value="amount_asc">Eng kichik summa</SelectItem>
         </SelectContent>
       </Select>
     </div>

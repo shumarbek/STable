@@ -1,7 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { revalidateAppData } from "@/lib/cache/revalidate-app-data";
 
 export async function markNotificationRead(notificationId: string): Promise<void> {
   const supabase = await createClient();
@@ -10,7 +10,7 @@ export async function markNotificationRead(notificationId: string): Promise<void
     .update({ is_read: true })
     .eq("id", notificationId);
 
-  revalidatePath("/notifications");
+  revalidateAppData();
 }
 
 export async function markAllNotificationsRead(): Promise<void> {
@@ -24,5 +24,5 @@ export async function markAllNotificationsRead(): Promise<void> {
     .eq("user_id", userData.user.id)
     .eq("is_read", false);
 
-  revalidatePath("/notifications");
+  revalidateAppData();
 }

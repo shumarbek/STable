@@ -37,21 +37,24 @@ export async function getWeeklyReportDetail(
 
   if (!report) return null;
 
-  const { data: items } = await supabase
-    .from("report_items")
-    .select("*")
-    .eq("report_id", reportId)
-    .order("total_amount", { ascending: false });
-
-  let topCategoryName: string | null = null;
-  if (report.top_category_id) {
-    const { data: cat } = await supabase
-      .from("categories")
-      .select("name")
-      .eq("id", report.top_category_id)
-      .maybeSingle();
-    topCategoryName = cat?.name ?? null;
-  }
+  const { data: rootTotals } = await supabase.rpc("get_top_categories", {
+    p_start_date: report.week_start,
+    p_end_date: report.week_end,
+    p_limit: 100,
+  });
+  const items: ReportItem[] = ((rootTotals ?? []) as Array<{
+    category_id: string; category_name: string; total_amount: number; percentage: number;
+  }>).map((item, index) => ({
+    id: `${reportId}-${index}`,
+    report_id: reportId,
+    user_id: report.user_id,
+    category_id: item.category_id,
+    category_name: item.category_name,
+    total_amount: Number(item.total_amount),
+    percentage: Number(item.percentage),
+    created_at: report.generated_at ?? report.created_at,
+  }));
+  const topCategoryName = items[0]?.category_name ?? null;
 
   let topTransactionNote: string | null = null;
   let topTransactionAmount: number | null = null;
@@ -67,7 +70,7 @@ export async function getWeeklyReportDetail(
 
   return {
     report: report as WeeklyReport,
-    items: (items as ReportItem[]) ?? [],
+    items,
     topCategoryName,
     topTransactionNote,
     topTransactionAmount,
