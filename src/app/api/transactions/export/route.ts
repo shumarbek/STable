@@ -37,15 +37,19 @@ export async function GET() {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData?.user) return NextResponse.json({ error: "Tizimga kirilmagan" }, { status: 401 });
 
-  const [{ data, error }, { data: categoryData }] = await Promise.all([
-    supabase.from("transactions").select(
+  const { data: categoryData } = await supabase.from("categories").select("*");
+  const rows: ExportRow[] = [];
+  const pageSize = 1000;
+  for (let from = 0; ; from += pageSize) {
+    const { data, error } = await supabase.from("transactions").select(
       "category_id,transaction_date,transaction_type,amount,currency,note,location,category:categories(name),account:user_accounts!transactions_account_id_fkey(name)"
-    ).order("transaction_date", { ascending: false }).order("created_at", { ascending: false }).limit(5000),
-    supabase.from("categories").select("*"),
-  ]);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  const rows = (data ?? []) as unknown as ExportRow[];
+    ).order("transaction_date", { ascending: false }).order("created_at", { ascending: false })
+      .range(from, from + pageSize - 1);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    const page = (data ?? []) as unknown as ExportRow[];
+    rows.push(...page);
+    if (page.length < pageSize) break;
+  }
   const hierarchy = buildCategoryHierarchy((categoryData ?? []) as Category[]);
   const workbook = new ExcelJS.Workbook();
   workbook.creator = "STable";
