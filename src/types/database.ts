@@ -62,6 +62,17 @@ export interface UserAccount {
   updated_at: string;
 }
 
+export interface BalanceEntry {
+  id: string;
+  user_id: string;
+  entry_date: string;
+  cash_amount: number;
+  card_amount: number;
+  note: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Category {
   id: string;
   user_id: string | null;

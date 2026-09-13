@@ -15,7 +15,7 @@
  *    writes surface a clear "network unavailable" error to the user.
  */
 
-const CACHE_NAME = "stable-shell-v3";
+const CACHE_NAME = "stable-shell-v4";
 const APP_SHELL = ["/", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
@@ -43,13 +43,19 @@ function isDataRequest(url) {
   );
 }
 
+function isNextDataRequest(request, url) {
+  return url.searchParams.has("_rsc") ||
+    request.headers.get("RSC") === "1" ||
+    request.headers.has("Next-Router-Prefetch");
+}
+
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
 
-  if (isDataRequest(url)) {
+  if (isDataRequest(url) || isNextDataRequest(request, url)) {
     // Network-only for anything data-related — never serve stale
     // financial data from cache.
     return;
@@ -68,16 +74,10 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request).then((response) => {
-        if (response.ok && (url.origin === self.location.origin)) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-        }
-        return response;
-      });
-    })
-  );
+  if (url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/icons/")) {
+    event.respondWith(caches.match(request).then((cached) => cached || fetch(request).then((response) => {
+      if (response.ok) caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
+      return response;
+    })));
+  }
 });

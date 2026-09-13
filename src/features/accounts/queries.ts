@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { UserAccount } from "@/types/database";
+import type { BalanceEntry, UserAccount } from "@/types/database";
 
 export async function getActiveAccounts(): Promise<UserAccount[]> {
   const supabase = await createClient();
@@ -30,4 +30,16 @@ export async function getAllAccounts(): Promise<UserAccount[]> {
   }
 
   return data as UserAccount[];
+}
+
+export async function getBalanceEntries(): Promise<BalanceEntry[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("balance_entries").select("*")
+    .order("entry_date", { ascending: false })
+    .order("created_at", { ascending: false });
+  if (error || !data) {
+    console.error("getBalanceEntries failed", error?.message);
+    return [];
+  }
+  return data as BalanceEntry[];
 }

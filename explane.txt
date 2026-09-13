@@ -1,0 +1,41 @@
+STable — kunlik o‘rtacha chiqim hisobining izohi
+
+1. Hisoblash formulasi
+
+Kunlik o‘rtacha muntazam chiqim = muntazam deb belgilangan chiqimlar jami / chiqim hisoboti kiritilgan kunlar soni.
+
+Masalan, 4 xil sana uchun chiqim hisoboti kiritilgan va shu kunlardagi muntazam chiqimlar jami 400 000 so‘m bo‘lsa:
+400 000 / 4 = kuniga 100 000 so‘m.
+
+Balansning taxminiy yetish muddati = joriy umumiy qoldiq / kunlik o‘rtacha muntazam chiqim.
+
+Bir sanada nechta band kiritilishidan qat’i nazar, u bitta hisobot kuni hisoblanadi. Faqat 0 so‘mlik “Uyda tayyorlangan” yozuvi mavjud kun ham chiqim hisoboti kiritilgan kun sifatida sanaladi, lekin 0 so‘m umumiy chiqimga qo‘shilmaydi.
+
+2. Kunlik o‘rtachaga kiradigan muntazam chiqimlar
+
+- Oziq-ovqat: Nonushta, Tushlik, Kechqurun, Oraliq va Uyda tayyorlangan (0 so‘m).
+- Ichimlik: Mineral suv, gazli ichimliklar, mevali choy, mevali sharbat va energetik ichimliklar.
+- Uy-joy va yashash: Ijara, Elektr, Gaz, Suv, Wi-Fi va Mobil tarif.
+- Transport: Metro, Avtobus, Tramvay va Taksi.
+- Ta’lim: O‘quv qurollari.
+- Obunalar: Sun’iy intellekt, Spotify yoki Apple Music, ITV yoki Netflix, Sport zali va boshqa obunalar.
+- Moliyaviy chiqimlar: Kredit to‘lovi.
+- Xaridlar: Tozalik va gigiyena vositalari, Ro‘zg‘orlik va Tamaki.
+
+3. Kunlik o‘rtachaga kirmaydigan bir martalik yoki davriy bo‘lmagan chiqimlar
+
+- Ta’lim: Kontrakt, Kurs, Kitob.
+- Texnologiya va elektronika: Qurilma, Aksessuar, Ta’mir.
+- Kiyim-kechak: Kiyim, Oyoq kiyim, Aksessuar.
+- Sog‘liq va tibbiyot: Shifokor, Dori, Optika, Tibbiy xarajatlar.
+- Ko‘ngilochar va dam olish: Attraksionlar, Kino, Konsert, Chempionat, Karaoke, O‘yin klubi, O‘yin monetalari, Dacha va boshqa xizmatlar.
+- Sayohat: Poyezd bileti, Aviachipta, Hostel.
+- Sovg‘a va xayriya: Tug‘ilgan kun sovg‘asi, Bayram sovg‘asi, Gul, Xayriya yoki ehson.
+- Moliyaviy chiqimlar: Qarz berish va Qarz qaytarish.
+- Xaridlar: Jihoz.
+
+4. Muhim farq
+
+“Kunlik o‘rtacha” barcha chiqimlarning oddiy o‘rtachasi emas. U foydalanuvchining odatda takrorlanib turadigan xarajatlarini hisoblaydi. Bir martalik katta xaridlar balans necha kunga yetishini sun’iy ravishda keskin kamaytirib yubormasligi uchun o‘rtachadan chiqarilgan.
+
+Joriy naqd va karta qoldig‘i esa barcha haqiqiy kirim, chiqim, balansga qo‘shilgan mablag‘ va tahrirlarni hisobga oladi. Muntazam bo‘lmagan chiqim kunlik o‘rtachaga kirmasa ham, amalga oshirilgan zahoti tegishli naqd yoki karta qoldig‘idan ayriladi.
