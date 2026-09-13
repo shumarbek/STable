@@ -29,6 +29,8 @@ export type NotificationType =
   | "goal_milestone"
   | "system";
 
+export type UzbekistanRegion = import("@/lib/profile/regions").UzbekistanRegion;
+
 export interface Profile {
   id: string;
   auth_user_id: string;
@@ -39,6 +41,7 @@ export interface Profile {
   course: string | null;
   avatar_url: string | null;
   gender: "male" | "female" | null;
+  region: UzbekistanRegion | null;
   timezone: string;
   currency: string;
   created_at: string;

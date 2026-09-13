@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { UZBEKISTAN_REGIONS } from "@/lib/profile/regions";
 
 export const signUpSchema = z
   .object({
@@ -60,6 +61,9 @@ export const onboardingSchema = z.object({
     error: "Jinsingizni tanlang",
   }),
   avatarUrl: z.string().trim().max(300).optional(),
+  region: z.enum(UZBEKISTAN_REGIONS, {
+    error: "Viloyat yoki hududingizni tanlang",
+  }),
 });
 
 export type OnboardingValues = z.infer<typeof onboardingSchema>;

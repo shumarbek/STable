@@ -250,6 +250,7 @@ export async function completeOnboarding(
     course: formData.get("course") || undefined,
     gender: formData.get("gender"),
     avatarUrl: formData.get("avatarUrl") || undefined,
+    region: formData.get("region"),
   });
 
   if (!parsed.success) {
@@ -271,6 +272,7 @@ export async function completeOnboarding(
       p_course: parsed.data.course ?? null,
       p_gender: parsed.data.gender,
       p_avatar_url: parsed.data.avatarUrl ?? "",
+      p_region: parsed.data.region,
     })
     .single();
 

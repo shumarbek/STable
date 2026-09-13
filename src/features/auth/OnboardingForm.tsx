@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Check, Copy, Loader2, Mars, Venus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,8 @@ import {
   type OnboardingResult,
 } from "@/features/auth/actions";
 import { AvatarPicker } from "@/features/profile/AvatarPicker";
+import { UZBEKISTAN_REGIONS } from "@/lib/profile/regions";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "cn";
 
 export function OnboardingForm({
@@ -17,9 +20,11 @@ export function OnboardingForm({
 }: {
   avatars: { male: string[]; female: string[] };
 }) {
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [gender, setGender] = useState<"male" | "female">("male");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [region, setRegion] = useState("");
   const [state, formAction, pending] = useActionState<
     OnboardingResult | null,
     FormData
@@ -61,7 +66,7 @@ export function OnboardingForm({
         </p>
         <Button
           className="h-11 w-full"
-          onClick={() => window.location.assign("/dashboard")}
+          onClick={() => router.push("/dashboard")}
         >
           Boshqaruv paneliga o&apos;tish
         </Button>
@@ -110,6 +115,20 @@ export function OnboardingForm({
         onChange={setAvatarUrl}
         avatars={avatars}
       />
+      <div className="grid gap-1.5">
+        <Label>Viloyat yoki hudud</Label>
+        <input type="hidden" name="region" value={region} />
+        <Select value={region || undefined} onValueChange={(value) => setRegion(value ?? "")}>
+          <SelectTrigger className="h-11 w-full">
+            <SelectValue placeholder="Hududingizni tanlang" />
+          </SelectTrigger>
+          <SelectContent>
+            {UZBEKISTAN_REGIONS.map((item) => (
+              <SelectItem key={item} value={item}>{item}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       <div className="grid gap-1.5">
         <Label htmlFor="universityName">Universitetingiz</Label>
         <Input id="universityName" name="universityName" required maxLength={200} />

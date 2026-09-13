@@ -30,6 +30,7 @@ export async function updateProfile(input: unknown): Promise<ProfileActionResult
       course: parsed.data.course ?? null,
       gender: parsed.data.gender,
       avatar_url: parsed.data.avatarUrl || null,
+      region: parsed.data.region,
     })
     .eq("auth_user_id", userData.user.id);
 

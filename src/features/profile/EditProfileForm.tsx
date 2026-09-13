@@ -13,6 +13,8 @@ import { updateProfile } from "@/features/profile/actions";
 import type { Profile } from "@/types/database";
 import { AvatarPicker } from "@/features/profile/AvatarPicker";
 import { cn } from "cn";
+import { UZBEKISTAN_REGIONS } from "@/lib/profile/regions";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function EditProfileForm({
   profile,
@@ -32,10 +34,12 @@ export function EditProfileForm({
       course: profile.course ?? "",
       gender: profile.gender ?? "male",
       avatarUrl: profile.avatar_url ?? "",
+      region: profile.region ?? undefined,
     },
   });
   const gender = useWatch({ control: form.control, name: "gender" }) ?? "male";
   const avatarUrl = useWatch({ control: form.control, name: "avatarUrl" }) ?? "";
+  const region = useWatch({ control: form.control, name: "region" });
 
   function onSubmit(values: OnboardingValues) {
     startTransition(async () => {
@@ -87,6 +91,25 @@ export function EditProfileForm({
         onChange={(value) => form.setValue("avatarUrl", value, { shouldDirty: true })}
         avatars={avatars}
       />
+      <div className="grid gap-1.5">
+        <Label>Viloyat yoki hudud</Label>
+        <Select
+          value={region}
+          onValueChange={(value) => value && form.setValue("region", value, { shouldDirty: true })}
+        >
+          <SelectTrigger className="h-10 w-full">
+            <SelectValue placeholder="Hududingizni tanlang" />
+          </SelectTrigger>
+          <SelectContent>
+            {UZBEKISTAN_REGIONS.map((item) => (
+              <SelectItem key={item} value={item}>{item}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {form.formState.errors.region && (
+          <p className="text-sm text-destructive">{form.formState.errors.region.message}</p>
+        )}
+      </div>
       <div className="grid gap-1.5">
         <Label htmlFor="universityName">Universitet</Label>
         <Input id="universityName" {...form.register("universityName")} />
