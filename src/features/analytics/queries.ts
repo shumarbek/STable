@@ -27,11 +27,6 @@ export interface TopTransactionRow {
   transaction_date: string;
 }
 
-export interface MealStats {
-  meal_count: number;
-  home_cooked_count: number;
-}
-
 export async function getItemBreakdown(
   startDate: string,
   endDate: string,
@@ -100,21 +95,4 @@ export async function getTopTransactions(
   }
 
   return (data as TopTransactionRow[]) ?? [];
-}
-
-export async function getMealStats(
-  startDate: string,
-  endDate: string
-): Promise<MealStats> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .rpc("get_meal_stats", { p_start_date: startDate, p_end_date: endDate })
-    .maybeSingle();
-
-  if (error || !data) {
-    console.error("get_meal_stats failed", error?.message);
-    return { meal_count: 0, home_cooked_count: 0 };
-  }
-
-  return data as MealStats;
 }

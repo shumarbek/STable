@@ -1,4 +1,4 @@
-# STable — Shaxsiy moliyaviy nazorat platformasi
+# STable
 
 STable — talabalar va oddiy foydalanuvchilar uchun aniq, xavfsiz va
 qulay shaxsiy moliyaviy boshqaruv paneli. Har bir daromad va xarajat

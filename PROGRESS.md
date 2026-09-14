@@ -26,7 +26,7 @@ original spec) are done, in progress, or pending.
 - [x] 8. Dashboard — summary cards, trend chart, top categories, empty
       state (`src/features/dashboard`)
 - [x] 9. Analytics — `/analytics`: monthly trend, account distribution,
-      item-level breakdown, top transactions, meal stats
+      item-level breakdown, top transactions
       (`010_analytics_rpc_functions.sql`, `src/features/analytics`)
 - [x] 10. Weekly reports — `/reports` list + `/reports/[id]` detail,
       idempotent SQL generator + pg_cron schedule

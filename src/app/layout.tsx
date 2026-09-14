@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "STable — Shaxsiy moliyaviy nazorat platformasi",
+  title: "STable",
   description:
     "Talabalar va oddiy foydalanuvchilar uchun aniq, xavfsiz va qulay shaxsiy moliyaviy boshqaruv paneli.",
   manifest: "/manifest.webmanifest",

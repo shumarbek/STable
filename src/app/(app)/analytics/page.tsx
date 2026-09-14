@@ -4,7 +4,6 @@ import {
   getAccountDistribution,
   getMonthlyTrend,
   getTopTransactions,
-  getMealStats,
   getItemBreakdown,
 } from "@/features/analytics/queries";
 import { getTopCategoriesThisMonth } from "@/features/dashboard/queries";
@@ -12,7 +11,6 @@ import { MonthlyTrendChart } from "@/features/analytics/MonthlyTrendChart";
 import { AccountDistributionChart } from "@/features/analytics/AccountDistributionChart";
 import { TopTransactionsList } from "@/features/analytics/TopTransactionsList";
 import { ItemBreakdownList } from "@/features/analytics/ItemBreakdownList";
-import { MealStatsCard } from "@/features/analytics/MealStatsCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatMoney } from "@/lib/calculations/money";
 import { CategoryIcon } from "@/features/categories/CategoryIcon";
@@ -27,14 +25,12 @@ export default async function AnalyticsPage() {
     monthlyTrend,
     accountDistribution,
     topTransactions,
-    mealStats,
     drinkBreakdown,
     topCategories,
   ] = await Promise.all([
     getMonthlyTrend(6),
     getAccountDistribution(monthStart, today),
     getTopTransactions(monthStart, today, 5),
-    getMealStats(monthStart, today),
     getItemBreakdown(monthStart, today),
     getTopCategoriesThisMonth(monthStart, today, 10),
   ]);
@@ -73,8 +69,6 @@ export default async function AnalyticsPage() {
         <ItemBreakdownList items={drinkBreakdown} />
         <TopTransactionsList transactions={topTransactions} />
       </div>
-
-      <MealStatsCard stats={mealStats} />
     </div>
   );
 }
