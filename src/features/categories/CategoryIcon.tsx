@@ -6,7 +6,7 @@ import {
   FerrisWheel, Flame, Gamepad2, GlassWater, Glasses, GraduationCap, HandCoins, HandHeart, Headphones,
   HeartPulse, Home, Hospital, KeyRound, Landmark, Laptop, MicVocal,
   Music, Package, PartyPopper, PencilRuler, Pill, Plane, Presentation,
-  ReceiptText, RefreshCw, Shirt, ShoppingBasket, Smartphone, Sparkles, Truck,
+  BadgeAlert, CircleOff, LockKeyholeOpen, ReceiptText, RefreshCw, ShieldAlert, Shirt, ShoppingBasket, Smartphone, Sparkles, Truck,
   SprayCan, Stethoscope, Ticket, TrainFront, Trees, Trophy, Tv,
   Utensils, Watch, Wifi, Wrench, Zap,
 } from "lucide-react";
@@ -34,6 +34,8 @@ const icons: Record<string, LucideIcon> = {
   "shopping-basket": ShoppingBasket, "spray-can": SprayCan,
   cigarette: Cigarette, package: Package, "circle-plus": CirclePlus,
   truck: Truck,
+  "shield-alert": ShieldAlert, "badge-alert": BadgeAlert,
+  "circle-off": CircleOff, "lock-keyhole-open": LockKeyholeOpen,
 };
 
 export function CategoryIcon({ icon, className }: { icon?: string | null; className?: string }) {
