@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { accountFormSchema } from "@/lib/validators/account";
+import { accountFormSchema, balanceConversionSchema } from "@/lib/validators/account";
 import { revalidateAppData } from "@/lib/cache/revalidate-app-data";
 import { z } from "zod";
 
@@ -34,6 +34,35 @@ export async function saveBalanceEntry(input: unknown): Promise<AccountActionRes
   if (error) {
     console.error("save_balance_entry failed", error.message);
     return { error: "Mablag‘ yozuvini saqlab bo‘lmadi." };
+  }
+
+  revalidateAppData();
+  return { success: true };
+}
+
+export async function convertBalance(input: unknown): Promise<AccountActionResult> {
+  const parsed = balanceConversionSchema.safeParse(input);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Ma’lumotlar noto‘g‘ri" };
+
+  const supabase = await createClient();
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData?.user) return { error: "Sessiya topilmadi." };
+
+  const { error } = await supabase.rpc("convert_balance", {
+    p_direction: parsed.data.direction,
+    p_amount: parsed.data.amount,
+    p_conversion_date: parsed.data.conversionDate,
+    p_note: parsed.data.note || null,
+    p_idempotency_key: parsed.data.idempotencyKey,
+  });
+
+  if (error) {
+    console.error("convert_balance failed", error.message);
+    if (error.message.includes("insufficient_balance")) return { error: "Manba hisobida mablag‘ yetarli emas." };
+    if (error.message.includes("conversion_date_before_balance")) return { error: "Sana balansning boshlang‘ich sanasidan oldin bo‘lishi mumkin emas." };
+    if (error.message.includes("conversion_date_in_future")) return { error: "Kelajak sanasini tanlab bo‘lmaydi." };
+    if (error.message.includes("account_not_found")) return { error: "Faol naqd yoki karta hisobi topilmadi." };
+    return { error: "Mablag‘ni konvertatsiya qilib bo‘lmadi." };
   }
 
   revalidateAppData();

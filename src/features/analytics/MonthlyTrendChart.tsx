@@ -37,12 +37,9 @@ export function MonthlyTrendChart({ data }: { data: MonthlyTrendRow[] }) {
                   fontSize: 12,
                 }}
               />
-              <Legend
-                formatter={(value) => (value === "total_expense" ? "Chiqim" : "Kirim")}
-                wrapperStyle={{ fontSize: 12 }}
-              />
-              <Bar dataKey="total_income" fill="var(--color-income)" radius={4} />
-              <Bar dataKey="total_expense" fill="var(--color-expense)" radius={4} />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
+              <Bar dataKey="total_income" name="Kirim" fill="var(--color-income)" radius={4} />
+              <Bar dataKey="total_expense" name="Chiqim" fill="var(--color-expense)" radius={4} />
             </BarChart>
           </ResponsiveContainer>
         </div>

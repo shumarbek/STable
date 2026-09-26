@@ -24,8 +24,8 @@ export default async function ReportsPage() {
           <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
             <FileText className="size-10 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
-              Hali hisobotlar yo&apos;q. Birinchi haftalik hisobot dushanba kuni
-              tayyor bo&apos;ladi.
+              Hali hisobotlar yo&apos;q. Yakunlangan hafta hisoboti dushanba kuni
+              soat 02:00 da tayyor bo&apos;ladi.
             </p>
           </CardContent>
         </Card>

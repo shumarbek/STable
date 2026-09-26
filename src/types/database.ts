@@ -73,6 +73,18 @@ export interface BalanceEntry {
   updated_at: string;
 }
 
+export interface BalanceConversion {
+  id: string;
+  amount: number;
+  transaction_date: string;
+  note: string | null;
+  created_at: string;
+  source_name: string;
+  source_type: AccountType;
+  target_name: string;
+  target_type: AccountType;
+}
+
 export interface Category {
   id: string;
   user_id: string | null;

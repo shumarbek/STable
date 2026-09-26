@@ -12,9 +12,12 @@ import { saveBalanceEntry } from "@/features/accounts/actions";
 import { toIsoDate } from "@/lib/calculations/date";
 import { formatMoney } from "@/lib/calculations/money";
 import type { BalanceEntry } from "@/types/database";
+import { BalanceConversionForm } from "@/features/accounts/BalanceConversionForm";
+import type { BalanceConversion } from "@/types/database";
 
-export function BalanceForm({ entries, cashRemaining, cardRemaining }: {
+export function BalanceForm({ entries, conversions, cashRemaining, cardRemaining }: {
   entries: BalanceEntry[];
+  conversions: BalanceConversion[];
   cashRemaining: number;
   cardRemaining: number;
 }) {
@@ -76,6 +79,8 @@ export function BalanceForm({ entries, cashRemaining, cardRemaining }: {
       <div className="grid gap-2"><Label htmlFor="balance-note">Izoh (ixtiyoriy)</Label><Input id="balance-note" value={note} onChange={(event) => setNote(event.target.value)} maxLength={200} placeholder="Masalan: oylik maoshdan qoldiq" /></div>
       <Button type="submit" className="h-11" disabled={isPending}>{isPending ? <Loader2 className="size-4 animate-spin" /> : editingId ? <Pencil className="size-4" /> : <Plus className="size-4" />}{editingId ? "O‘zgarishni saqlash" : "Balansga qo‘shish"}</Button>
     </form>
+
+    <BalanceConversionForm conversions={conversions} cashRemaining={cashRemaining} cardRemaining={cardRemaining} />
 
     <section className="grid gap-2">
       <div><h2 className="font-semibold">Mablag‘lar tarixi</h2><p className="text-xs text-muted-foreground">Har bir qo‘shilgan mablag‘ sana bo‘yicha saqlanadi.</p></div>
